@@ -1,0 +1,556 @@
+/* Global styles */
+@font-face {
+    font-family: 'VC Miriam';
+    src: url('fonts/VC_Miriam-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-Semibold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-Black.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-Thin.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-ExtraLight.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SimplerPro Condensed';
+    src: url('fonts/SimplerPro_Condensded-ExtraBold.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Parmigiano Headline';
+    src: url('fonts/ParmigianoHeadlineH+L-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'VC Frankruel';
+    src: url('fonts/VC_Frankruel-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-DisplayThin.woff2') format('woff2');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-DisplayThinItalic.woff2') format('woff2');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-MediumItalic.woff2') format('woff2');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'TheBasics-Regular';
+    src: url('fonts/TheBasics-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TheBasics-Dots';
+    src: url('fonts/TheBasics-Dots.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ABCMaristVariableItalic';
+    src: url('fonts/ABCMaristVariableItalic-Trial.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'ABCArizonaSerifVariable';
+    src: url('fonts/ABCArizonaSerifVariable-Trial.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RomemaSpitzer';
+    src: url('fonts/RomemaSpitzer-Heavy.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RomemaSpitzer';
+    src: url('fonts/RomemaSpitzer-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RomemaSpitzer';
+    src: url('fonts/RomemaSpitzer-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RomemaSpitzer';
+    src: url('fonts/RomemaSpitzer-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RomemaSpitzer';
+    src: url('fonts/RomemaSpitzer-Thin.woff2') format('woff2');
+    font-weight: 100;
+    font-style: normal;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    /* Prevent padding from enlarging elements */
+}
+
+* {
+    margin: 0;
+    /* Remove extra margin from everything (body, headings, etc...) */
+}
+
+img {
+    max-width: 100%;
+    /* Don't let images be more than their container's width */
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+    /* Break long words in headings & paragraphs */
+}
+
+ul {
+    /* Don't style unordered lists (good for nav menus!) */
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    /* No blue links! */
+    color: inherit;
+}
+
+
+:root {
+    --primary-color: #160505;
+    --secondary-color: #444;
+    --accent-color: #c0c0c0;
+    --background-color: #160505;
+    --paper-color: #ddddd1;
+    --border-color: #ddd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'RomemaSpitzer', 'TheBasics', 'David', 'Times New Roman', serif;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    direction: rtl;
+    padding: 20px;
+    color: var(--accent-color);
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-feature-settings: normal;
+}
+
+#grain-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.article {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100vw;
+    gap: 20px;
+    padding: 40px;
+    border-radius: 0px;
+    line-height: 1.3;
+}
+
+.article-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 100vw;
+}
+
+.images-wrapper {
+    padding-top: 120vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 120vh;
+}
+
+/* Typography */
+h1 {
+    font-family: 'Parmigiano Headline', 'SimplerPro Condensed', serif;
+    font-size: 7vh;
+    text-align: right;
+    margin-bottom: 20px;
+    color: var(--accent-color);
+    font-weight: bold;
+    line-height: 2;
+    letter-spacing: 8vw;
+    text-shadow: 0 0 15px var(--accent-color), 0 0 20px rgba(192, 192, 192, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    z-index: 100;
+    background: transparent;
+    transition: opacity 0.3s;
+}
+
+h2 {
+    align-self: center;
+    border-bottom: 7px solid var(--border-color);
+    padding-bottom: 20px;
+    border-image: linear-gradient(to right,
+            transparent,
+            var(--accent-color) 100%,
+            transparent) 1;
+    text-shadow: 0 0 15px var(--accent-color), 0 0 20px rgba(192, 192, 192, 0.3);
+    transform: rotate(-5deg);
+    /* Adjust the angle as needed */
+    transform-origin: right bottom;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.h2-wrapper {
+    align-self: center;
+    align-self: center;
+    font-family: 'Parmigiano Headline', 'SimplerPro Condensed', serif;
+    width: 60%;
+    text-align: right;
+    font-size: 50px;
+    font-weight: bold;
+    align-items: center;
+    line-height: 2;
+    letter-spacing: 4vw;
+    margin: 30px 0 15px;
+    color: var(--accent-color);
+    padding-bottom: 20px;
+
+}
+
+p {
+    margin-bottom: 12px;
+    line-height: 1.6;
+    /* text-align: justify; */
+    font-size: 24px;
+    /* color: var(--accent-color); */
+    font-weight: normal;
+    max-width: 55vw;
+}
+
+.article-text-columns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    gap: 150px;
+    width: 60%;
+    margin-top: 200px;
+    margin-bottom: 0px;
+    position: relative;
+}
+
+.article-text-columns::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom,
+        transparent,
+        var(--accent-color) 20%,
+        var(--accent-color) 100%,
+        transparent
+    );
+    transform: rotate(-15deg);
+    transform-origin: bottom right;
+    right: 40%;
+    bottom: 2%;
+}
+
+.article-text-columns-line {
+    border-bottom: 7px solid var(--border-color);
+    transform: rotate(55deg);
+    width: 100%;
+}
+
+.paper {
+    max-width: 50vw;
+    margin: 0 auto;
+    background-color: var(--paper-color);
+    text-align: justify;
+    color: rgb(48, 24, 24);
+    padding: 40px;
+    box-shadow: 0 0 20px rgba(244, 233, 113, 0.883);
+    border-radius: 0px;
+    margin: 40px 0px 40px 0px;
+}
+
+.paper p {
+    width: 100%;
+}
+
+
+.author {
+    width: 30%;
+    color: var(--accent-color);
+    text-align: right;
+    font-size: 20px;
+    font-weight: 900;
+    /* letter-spacing: 1.3em; */
+    margin-bottom: 0px;
+    margin-right: 1%;
+    border-bottom: 1px solid var(--border-color);
+    border-width: 2px;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right,
+            transparent,
+            var(--accent-color) 100%,
+            transparent) 1;
+}
+
+.image-container {
+    width: 40vw;
+    /* box-shadow: 20px 20px 20px 20px rgba(244, 233, 113, 0.883); */
+}
+
+.image-container img {
+    width: 80%;
+    box-shadow: -20px -20px 20px 20px rgba(244, 233, 113, 0.883);
+
+}
+
+.image-caption {
+    font-family: 'VC Miriam', 'SimplerPro Condensed', serif;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: right;
+    width: 60%;
+}
+
+/* Blockquotes */
+blockquote {
+    margin: 20px 0;
+    padding: 10px 20px;
+    border-right: 5px solid var(--accent-color);
+    background-color: rgba(0, 0, 0, 0.03);
+    font-style: italic;
+}
+
+/* Figure and images */
+figure {
+    margin: 25px 0;
+    text-align: center;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+figcaption {
+    font-family: 'VC Miriam', 'SimplerPro Condensed', serif;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* References */
+.references {
+    margin-top: 40px;
+    border-top: 2px solid var(--border-color);
+    border-image: linear-gradient(to right,
+            transparent,
+            var(--accent-color) 100%,
+            transparent) 1;
+    padding-top: 20px;
+}
+
+.references h2 {
+    margin-bottom: 20px;
+}
+
+.references ul {
+    list-style-type: none;
+    padding-right: 0;
+}
+
+.references li {
+    margin-bottom: 10px;
+    padding-right: 20px;
+    text-indent: -20px;
+}
+
+/* Footnotes */
+.footnotes {
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    border-image: linear-gradient(to right,
+            transparent,
+            var(--accent-color) 100%,
+            transparent) 1;
+    padding-top: 15px;
+    font-size: 14px;
+}
+
+.footnote {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.footnote-number {
+    min-width: 25px;
+    font-weight: bold;
+}
+
+/* Special text handling */
+.en {
+    font-weight: bold;
+    font-family: 'TheBasics', 'ABCArizonaSerifVariable', 'VC Frankruel', serif;
+    /* font-size: 24px; 
+    letter-spacing: 0.4em;
+    color: yellow; */
+    /* color: black;
+    background-color: rgb(238, 253, 76); */
+}
+
+.numbers {
+    font-family: 'ABCArizonaSerifVariable', 'VC Frankruel', serif;
+}
+
+.abstract {
+    font-style: italic;
+    margin: 0 40px 30px;
+    line-height: 1.5;
+}
+
+/* Bio section */
+.bio {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    border-image: linear-gradient(to right,
+            transparent,
+            var(--accent-color) 100%,
+            transparent) 1;
+    font-style: italic;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .paper {
+        padding: 20px;
+    }
+}
+
+/* Blur effect styles */
+.paper p {
+    filter: blur(8px);
+    transition: filter 0.5s ease-out;
+    opacity: 0.5;
+}
+
+.paper p.is-visible {
+    filter: blur(0);
+    opacity: 1;
+}
