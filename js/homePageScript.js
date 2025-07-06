@@ -23,21 +23,21 @@ class MultiFaceDisplay {
         this.primitiveSettings = [];
         this.isPixelationMode = true; // DEFAULT MODE - start with pixelation
         this.pixelationSettings = [];
-        
+
         // Entrance animation for pixelation mode
         this.isEntranceAnimating = false;
         this.entranceAnimationSpeed = 80; // milliseconds between reveals
         this.revealedPanels = new Set();
         this.lastRevealTime = 0;
         this.isInitialLoad = true; // Track if this is the first load
-        
+
         // Magic numbers
-        this.PIXELATION_TEXT_PANEL_COUNT = 8; // Number of pixelation text panels to create
-        
+        this.PIXELATION_TEXT_PANEL_COUNT = 10; // Number of pixelation text panels to create
+
         // Text overlay configuration
         this.enableTextOverlay = true; // Toggle for overlay text
         this.overlayTextCache = new Map(); // Cache for overlay text textures
-        
+
         // Character-based headline display
         this.enableCharacterDisplay = true; // Toggle for character-based headlines
         this.currentHeadline = "גחליליות"; // Default headline for initial load
@@ -92,40 +92,40 @@ class MultiFaceDisplay {
         // Hebrew articles configuration for each mode
         this.modeArticles = {
             effects: [
-                { 
-                    title: "101 דרכים להבחין בין 'פסיכו' של היצ'קוק ל'פסיכו' של גאס ואן סנט", 
+                {
+                    title: "101 דרכים להבחין בין 'פסיכו' של היצ'קוק ל'פסיכו' של גאס ואן סנט",
                     author: "תומס מ. ליטש",
                     articleSentences: [
                         "המאמר מציע מדריך מקיף להבדלים הרבים – גדולים וקטנים – בין הסרט 'פסיכו' המקורי של היצ'קוק לבין הרימייק של גאס ואן סנט מ-1998.",
                         "באמצעות ניתוח השוואתי מפורט של כל מרכיב – משחק, דיאלוג, סאונד, בימוי, עיצוב ועריכה – נטען שהרימייק שונה מהותית מהמקור גם כאשר הוא שומר לכאורה על נאמנות צורנית."
                     ]
                 },
-                { 
-                    title: "'פסיכו', פטישיזם ועונג", 
+                {
+                    title: "'פסיכו', פטישיזם ועונג",
                     author: "ענת זנגר",
                     articleSentences: [
                         "המאמר בוחן את הסרט 'פסיכו' של היצ'קוק דרך עקרונות של חזרתיות, מציצנות ופטישיזם תרבותי.",
                         "זנגר עוקבת אחר גלגוליה הרבים של 'פסיכו' ו'סצנת המקלחת' שלו בטקסטים קולנועיים ותרבותיים, ומנתחת את הפיכתו לאובייקט פולחן שמעורר עונג מציצני וחרדה תרבותית."
                     ]
                 },
-                { 
-                    title: "לשמוע אותך שוב: הקול כמשקף חרדה טכנולוגית בסרטי 'כוכב נולד'", 
+                {
+                    title: "לשמוע אותך שוב: הקול כמשקף חרדה טכנולוגית בסרטי 'כוכב נולד'",
                     author: "תומר נחושתן",
                     articleSentences: [
                         "המאמר עוקב אחר ארבעת העיבודים של 'כוכב נולד' ובוחן כיצד הם מתמודדים עם חרדה מטכנולוגיות קול והפרדת הקול מהגוף.",
                         "דרך ניתוח סצנות, שירה והקלטה, נטען שהסרטים מבקשים להציג את הקול כנובע 'באופן טבעי' מהכוכבת, גם בעידן של עיבוד דיגיטלי, ובכך שומרים על מיתוס הכוכבות האותנטית."
                     ]
                 },
-                { 
-                    title: "הגן שלנו עקור: חזרות והשמטות בסרטי 'הגננת'", 
+                {
+                    title: "הגן שלנו עקור: חזרות והשמטות בסרטי 'הגננת'",
                     author: "אורי יעקובוביץ'",
                     articleSentences: [
                         "המאמר מציג ניתוח השוואתי בין 'הגננת' של נדב לפיד לבין הרימייק האמריקאי שלו, ובוחן את ההבדלים התרבותיים ביניהם.",
                         "באמצעות תיאוריות של אדפטציה, ביטוס וריאלמות, נטען שהגרסה הישראלית מציגה התנגשות בין האמן להקולקטיב, ואילו הרימייק האמריקאי מתמקד באינדיווידואליזם ובמאבק למימוש עצמי."
                     ]
                 },
-                { 
-                    title: "להתאהב לצלילי הרכבת: קריאה אקוסטית בשלושה גלגולים של 'פגישה מקרית'", 
+                {
+                    title: "להתאהב לצלילי הרכבת: קריאה אקוסטית בשלושה גלגולים של 'פגישה מקרית'",
                     author: "רותם זודמן",
                     articleSentences: [
                         "המאמר בוחן את השימוש בקולה של הרכבת בשלושה גלגולים של 'פגישה מקרית' – מחזה, סרט עלילתי והומאז' קולנועי.",
@@ -134,32 +134,32 @@ class MultiFaceDisplay {
                 }
             ],
             delay: [
-                { 
-                    title: "'זד ושני אפסים' של פיטר גרינאוויי פוגש את 'השיגעון הלבן' של אדריאן דיטוורסט", 
+                {
+                    title: "'זד ושני אפסים' של פיטר גרינאוויי פוגש את 'השיגעון הלבן' של אדריאן דיטוורסט",
                     author: "חרווין ואן דר פול",
                     articleSentences: [
                         "המאמר מתאר את חוויית הצפייה הסינפילית דרך השוואה מפתיעה בין הסרט 'זד ושני אפסים' של גרינאוויי ל'הַשִּׁגָּעוֹן הַלָּבָן' של דיטוורסט.",
                         "ואן דר פול בוחן את העונג שבגילוי הקשרים הנסתרים בין סרטים, גם כשאינם מכוונים, כחוויה אינטימית של הסינפיל שמעניקה תחושת גאווה וייחודיות."
                     ]
                 },
-                { 
-                    title: "חזרתיות הטיפוסים ומציאותיות הזמן בקולנוע ההוליוודי: צ'נינג טייטום כמקרה מבחן", 
+                {
+                    title: "חזרתיות הטיפוסים ומציאותיות הזמן בקולנוע ההוליוודי: צ'נינג טייטום כמקרה מבחן",
                     author: "יואב ארבל",
                     articleSentences: [
                         "המאמר טוען כי חזרתיות בליהוקו של צ'נינג טייטום לטיפוס קולנועי מסוים יוצרת תחושת זמן ריאליסטית ועמוקה בקולנוע.",
                         "דרך תפקידיו השונים אך הדומים של טייטום, המאמר מדגים כיצד טיפוס קולנועי מתבגר עם הצופה ויוצר חוויית זמן קולקטיבית."
                     ]
                 },
-                { 
-                    title: "החזרה בקולנוע של אנייס ורדה כמערכת של עודפות קולנועית, חתרנות והנאה", 
+                {
+                    title: "החזרה בקולנוע של אנייס ורדה כמערכת של עודפות קולנועית, חתרנות והנאה",
                     author: "טל רז",
                     articleSentences: [
                         "המאמר בוחן כיצד החזרה – סגנונית, נרטיבית ובין-טקסטואלית – משמשת את אנייס ורדה ככלי ליצירת עונג קולנועי לצד מסר פמיניסטי רדיקלי.",
                         "באמצעות ניתוח סרטים מרכזיים, נטען שהחזרה מאפשרת הן חוויה אסתטית והן גיבוש של תודעה ביקורתית אצל הצופה."
                     ]
                 },
-                { 
-                    title: "דינמיקת החזרה כאסטרטגיה של דימוי הגוף הנשי השמן", 
+                {
+                    title: "דינמיקת החזרה כאסטרטגיה של דימוי הגוף הנשי השמן",
                     author: "דורית גילון פיסטינר",
                     articleSentences: [
                         "המאמר עוסק באופן שבו סרטים קומיים פוסט-פמיניסטיים מציגים את הגוף הנשי השמן בעזרת תחבולות חזרתיות שמפרקות סטריאוטיפים ויוצרות ייצוג חדש וחיובי.",
@@ -168,32 +168,32 @@ class MultiFaceDisplay {
                 }
             ],
             zoom: [
-                { 
-                    title: "התפתחות הדמויות בסדרות טלוויזיה: מסגרת של מערכת אקולוגית נרטיבית", 
+                {
+                    title: "התפתחות הדמויות בסדרות טלוויזיה: מסגרת של מערכת אקולוגית נרטיבית",
                     author: "ורוניקה אינוצ'נטי וגוליילמו פסקאטורה",
                     articleSentences: [
                         "המאמר מציע פרדיגמה חדשנית להבנת סדרות טלוויזיה כ'מערכת אקולוגית נרטיבית' – מודל שמתאר כיצד דמויות עוברות תהליכי ברירה והתפתחות בדומה לעולם הטבע.",
                         "באמצעות אנלוגיה ביולוגית, מוצגות דרכים שבהן תסריטאים ומפיקים מעצבים את הדמויות לאורך זמן כדי להבטיח הישרדות, שינוי ויציבות של יקום הסדרה."
                     ]
                 },
-                { 
-                    title: "מתחת לברדס הצדק: טראומת הגזע וחזרתיות באקוסיסטם 'השומרים'", 
+                {
+                    title: "מתחת לברדס הצדק: טראומת הגזע וחזרתיות באקוסיסטם 'השומרים'",
                     author: "יונתן אונגר",
                     articleSentences: [
                         "המאמר מנתח את הסדרה 'השומרים' כקריאה מחודשת ביצירה הקנונית של מור וגיבונס, דרך פריזמה של טראומה בין-דורית וגזענות אמריקאית.",
                         "באמצעות מודל האקוסיסטם הנרטיבי והיפר-טקסטואליות, נטען שהסדרה מבצעת רה-קונסטרוקציה של מיתוס גיבורי-העל ומציעה תיקון היסטורי באמצעות זהות שחורה גיבורת-על חדשה."
                     ]
                 },
-                { 
-                    title: "בחזרה ל'טווין פיקס' דרך הקריסטל", 
+                {
+                    title: "בחזרה ל'טווין פיקס' דרך הקריסטל",
                     author: "ליאור פרלשטיין",
                     articleSentences: [
                         "המאמר קורא את 'טווין פיקס: החזרה' כגרסה מאוחרת המפרקת את תפיסת הזמן והזהות, ומציעה חוויית צפייה פתלתלה וא-ליניארית.",
                         "באמצעות מושג 'דימוי-הקריסטל' של דלז, נטען שהחזרה משקפת מצבי זמן קונפליקטואליים – חיים ומוות, עבר ועתיד – ומערערת על מושג המקור ביצירה הסדרתית."
                     ]
                 },
-                { 
-                    title: "'האחיות בראון': זמן וחזרתיות בסדרת התצלומים של ניקולס ניקסון", 
+                {
+                    title: "'האחיות בראון': זמן וחזרתיות בסדרת התצלומים של ניקולס ניקסון",
                     author: "מיה פרנקל טנא",
                     articleSentences: [
                         "המאמר עוסק בפרויקט הצילום רב-השנים של ניקולס ניקסון, שמתעד את ארבע האחיות לבית בראון במשך כמעט חמישה עשורים.",
@@ -202,32 +202,32 @@ class MultiFaceDisplay {
                 }
             ],
             pixelation: [
-                { 
-                    title: "פיקסלים כמטפורה: הרטרו-פוטוריזם של משחקי הווידאו הקלאסיים", 
+                {
+                    title: "פיקסלים כמטפורה: הרטרו-פוטוריזם של משחקי הווידאו הקלאסיים",
                     author: "דן גרוס",
                     articleSentences: [
                         "פיקסלים במשחקי וידאו קלאסיים מייצגים נוסטלגיה ועתיד בו זמנית.",
                         "הרטרו-פוטוריזם יוצר מפגש מעניין בין טכנולוגיה ישנה לחדשה."
                     ]
                 },
-                { 
-                    title: "חזרת הפרימיטיב: פיקסלציה כאמצעי הפשטה באמנות דיגיטלית", 
+                {
+                    title: "חזרת הפרימיטיב: פיקסלציה כאמצעי הפשטה באמנות דיגיטלית",
                     author: "מאיה רון",
                     articleSentences: [
                         "פיקסלציה מאפשרת חזרה אל הבסיסי והפרימיטיבי באמנות הדיגיטלית.",
                         "ההפשטה הדיגיטלית יוצרת שפה חדשה של ביטוי אמנותי."
                     ]
                 },
-                { 
-                    title: "הקישור הנעדר: ממשחקי ארקיד לקולנוע אקספריטמנטלי", 
+                {
+                    title: "הקישור הנעדר: ממשחקי ארקיד לקולנוע אקספריטמנטלי",
                     author: "יונתן שמאי",
                     articleSentences: [
                         "הקשר בין משחקי ארקיד לקולנוע אקספריטמנטלי חושף שפה ויזואלית משותפת.",
                         "הפיקסל כיחידה ויזואלית מקשרת בין מדיות שונות."
                     ]
                 },
-                { 
-                    title: "ביטים וביטקוינים: האסתטיקה הדיגיטלית כמוצר פיננסי", 
+                {
+                    title: "ביטים וביטקוינים: האסתטיקה הדיגיטלית כמוצר פיננסי",
                     author: "נעמה לוי",
                     articleSentences: [
                         "האסתטיקה הדיגיטלית הופכת למוצר פיננסי באמצעות NFT וקריפטו.",
@@ -304,7 +304,7 @@ class MultiFaceDisplay {
 
             this.fontsLoaded = true;
             // // console.log('🎉 All custom Hebrew fonts loaded successfully!');
-            
+
             // Test if sentence font is available
             if (document.fonts.check(`16px "${this.fontConfig.scentence.name}"`)) {
                 // // console.log('✅ Sentence font is available for use');
@@ -497,17 +497,17 @@ class MultiFaceDisplay {
         if (this.faceDetectionInterval) {
             clearInterval(this.faceDetectionInterval);
         }
-    
+
         let isDetecting = false;
         // Remove the local zoomInitialized variable - use class property instead
-    
+
         // Run face detection with different behavior per mode
         this.faceDetectionInterval = setInterval(async () => {
             if (!this.isRunning || isDetecting) return;
-    
+
             try {
                 isDetecting = true;
-    
+
                 if (this.isZoomMode && !this.zoomInitialized) {
                     // ONE-TIME detection for zoom mode initialization
                     // console.log('🔍 Running initial face detection for zoom initialization...');
@@ -516,13 +516,13 @@ class MultiFaceDisplay {
                     this.updateIntelligentZoomSettings(); // This will only run once
                     this.zoomInitialized = true; // Mark as initialized (class property)
                     // console.log('✅ Zoom mode initialized with eye positions');
-    
+
                 } else if (this.isPrimitiveMode) {
                     // Continue detecting for primitive mode (it needs real-time updates)
                     await this.detectFacesForPrimitive();
                 }
                 // Note: Zoom mode stops detecting after initialization
-    
+
             } catch (error) {
                 console.warn('Face detection loop error:', error.message);
             } finally {
@@ -851,7 +851,7 @@ class MultiFaceDisplay {
         // Store previous mode to detect if we're actually changing modes
         const wasDelayMode = this.isDelayMode;
         const wasZoomMode = this.isZoomMode;
-        
+
         // Reset all modes
         this.isDelayMode = false;
         this.isZoomMode = false;
@@ -902,7 +902,7 @@ class MultiFaceDisplay {
             this.currentHeadline = headline;
             // // console.log(`📝 Setting headline from navbar: ${headline}`);
         }
-        
+
         // Then set the mode
         this.setMode(modeKey);
     }
@@ -956,7 +956,7 @@ class MultiFaceDisplay {
             if (!this.currentStrategyIndex) {
                 this.currentStrategyIndex = 0;
             }
-            
+
             this.currentStrategyIndex = (this.currentStrategyIndex + 1) % 5; // 5 strategies: random, zonal, gradient, symmetrical, concentric, diagonal
             console.log("current strategy index: ", this.currentStrategyIndex);
             // Force recreation of face planes with new strategy
@@ -968,7 +968,7 @@ class MultiFaceDisplay {
     toggleOverlayText() {
         this.enableTextOverlay = !this.enableTextOverlay;
         // // console.log(`📝 Overlay text ${this.enableTextOverlay ? 'enabled' : 'disabled'}`);
-        
+
         if (this.isRunning && this.videoTexture) {
             // Recreate face planes with new overlay settings
             this.createFacePlanes();
@@ -978,7 +978,7 @@ class MultiFaceDisplay {
     toggleCharacterDisplay() {
         this.enableCharacterDisplay = !this.enableCharacterDisplay;
         // // console.log(`🔤 Character display ${this.enableCharacterDisplay ? 'enabled' : 'disabled'}`);
-        
+
         if (this.isRunning && this.videoTexture) {
             // Recreate face planes with new character display settings
             this.createFacePlanes();
@@ -1131,9 +1131,9 @@ class MultiFaceDisplay {
                         pixelationTextures: pixelationTextures
                     };
                 }
-                
+
                 const pixelationTextures = this.textTexturesCache[modeKey].pixelationTextures;
-                
+
                 // Select random positions for single text panels (avoiding second row)
                 // Cache positions to avoid regeneration on resize
                 const cacheKey = `pixelation_${cols}x${rows}`;
@@ -1144,12 +1144,12 @@ class MultiFaceDisplay {
                     };
                 }
                 const textPositions = this.cachedTextPositions.positions;
-                
+
                 // Create a map for quick lookup of text panels
                 textPositions.forEach((position, index) => {
                     textPanelMap.set(position, { type: 'pixelation', index: index });
                 });
-                
+
             } else {
                 // Regular mode - title+author pairs
                 // Check if we have cached textures for this mode
@@ -1198,30 +1198,30 @@ class MultiFaceDisplay {
                     faceData.overlayTexture.dispose();
                 }
             }
-            
+
             this.scene.remove(faceData.mesh);
             if (faceData.primitiveContainer) {
                 this.scene.remove(faceData.primitiveContainer);
             }
         });
         this.facePlanes = [];
-        
+
         // Reset hover state
         this.hoveredPair = null;
         this.currentHoveredPanel = null; // Reset currently hovered panel for twin detection
-        
+
         // Clear scattered character positions if grid size changed OR if text panel positions might have changed
         // (this forces regeneration with new grid dimensions or new text panel layout)
         if (this.lastGridSize && (this.lastGridSize.cols !== cols || this.lastGridSize.rows !== rows)) {
             this.scatteredCharacterPositions = null;
             // console.log(`🔄 Grid size changed (${this.lastGridSize.cols}x${this.lastGridSize.rows} → ${cols}x${rows}), clearing scattered positions`);
         }
-        
+
         // ALWAYS clear character positions when face planes are recreated 
         // because text panel positions are random and change each time
         this.scatteredCharacterPositions = null;
         // console.log(`🔄 Clearing scattered character positions to avoid text panel conflicts`);
-        
+
         this.lastGridSize = { cols, rows };
 
         // CREATE COHESIVE EFFECT DISTRIBUTION
@@ -1412,7 +1412,7 @@ class MultiFaceDisplay {
             let overlayTexture = null;
             let overlayPlane = null;
             let isCharacterPanel = false;
-            
+
             // Check if we should create character panels from current headline
             if (this.enableCharacterDisplay && this.currentHeadline && this.currentHeadline.trim() !== '') {
                 if (this.currentHeadline.trim() === 'עמוד בית') {
@@ -1420,7 +1420,7 @@ class MultiFaceDisplay {
                 }
                 const characters = this.splitHebrewText(this.currentHeadline.trim());
                 const totalCharacters = characters.length;
-                
+
                 // Generate scattered positions for characters (if not already done)
                 if (!this.scatteredCharacterPositions || this.scatteredCharacterPositions.length !== totalCharacters) {
                     this.scatteredCharacterPositions = this.generateScatteredCharacterPositions(
@@ -1429,23 +1429,23 @@ class MultiFaceDisplay {
                     // // console.log(`🎲 Generated scattered positions for "${this.currentHeadline}":`, 
                     //     this.scatteredCharacterPositions.map(pos => `${pos.char}@(${pos.col},${pos.row})`));
                 }
-                
+
                 // Calculate current panel position
                 const col = i % cols;
                 const row = Math.floor(i / cols);
-                
+
                 // Check if this panel position matches any scattered character position
                 const characterMatch = this.scatteredCharacterPositions.find(
                     charPos => charPos.col === col && charPos.row === row && charPos.panelIndex === i
                 );
-                
+
                 if (characterMatch && characterMatch.character && characterMatch.character.trim() !== '') {
                     // Only use headline style (no variety)
                     let style = 'headline';
-                    
+
                     // Create character texture
                     overlayTexture = this.createCharacterTexture(characterMatch.character, facePixelWidth, facePixelHeight, style);
-                    
+
                     // Create overlay material with reveal support for entrance animation
                     const overlayMaterial = new THREE.MeshBasicMaterial({
                         map: overlayTexture,
@@ -1453,16 +1453,16 @@ class MultiFaceDisplay {
                         opacity: 0.0, // Always start hidden for entrance animation
                         depthWrite: false
                     });
-                    
+
                     // Create overlay plane (slightly in front of main plane)
                     overlayPlane = new THREE.Mesh(geometry, overlayMaterial);
                     overlayPlane.position.copy(plane.position);
                     overlayPlane.position.z += 0.001;
-                    
+
                     this.scene.add(overlayPlane);
                     overlayText = characterMatch.character;
                     isCharacterPanel = true;
-                    
+
                     // // console.log(`📝 Placed character "${characterMatch.character}" (${characterMatch.index + 1}/${totalCharacters}) at panel ${i} (${col},${row}) with ${style} style`);
                 }
             }
@@ -1471,7 +1471,7 @@ class MultiFaceDisplay {
                 // Select deterministic overlay text based on position
                 const textIndex = (i * 1549) % this.overlayTexts.length;
                 const randomText = this.overlayTexts[textIndex];
-                
+
                 // Determine style based on text content
                 let style = 'default';
                 if (['LIVE', 'חי', 'ON AIR', 'שידור'].includes(randomText)) {
@@ -1481,10 +1481,10 @@ class MultiFaceDisplay {
                 } else if (['חי', 'עכשיו', 'שידור', 'אוויר', 'רשת', 'מקוון'].includes(randomText)) {
                     style = 'hebrew';
                 }
-                
+
                 // Create overlay texture
                 overlayTexture = this.createOverlayTextTexture(randomText, facePixelWidth, facePixelHeight, style);
-                
+
                 // Create overlay material
                 const overlayMaterial = new THREE.MeshBasicMaterial({
                     map: overlayTexture,
@@ -1492,12 +1492,12 @@ class MultiFaceDisplay {
                     opacity: 0.9,
                     depthWrite: false // Ensure it renders on top
                 });
-                
+
                 // Create overlay plane (slightly in front of main plane)
                 overlayPlane = new THREE.Mesh(geometry, overlayMaterial);
                 overlayPlane.position.copy(plane.position);
                 overlayPlane.position.z += 0.001; // Slightly in front
-                
+
                 this.scene.add(overlayPlane);
                 overlayText = randomText;
             }
@@ -1556,11 +1556,11 @@ class MultiFaceDisplay {
         // this.initializeDelayOrder(); // Moved to updateModeDisplay with conditions
         // this.initializeZoomSettings(); // Moved to updateModeDisplay with conditions
 
-        const textPanelCount = this.isPixelationMode ? 
+        const textPanelCount = this.isPixelationMode ?
             Object.keys(textPanelMap).length : // Pixelation mode has some text panels
             textPairs.length * 2;
         const pairCount = this.isPixelationMode ? 0 : textPairs.length;
-        const characterCount = this.isPixelationMode && this.currentHeadline ? 
+        const characterCount = this.isPixelationMode && this.currentHeadline ?
             this.splitHebrewText(this.currentHeadline.trim()).length : 0;
         // // console.log(`Created ${faceCount} faces in ${cols}x${rows} grid with ${textPanelCount} text panels (${pairCount} pairs) and ${characterCount} character overlays for ${modeKey} mode`);
     }
@@ -1738,10 +1738,10 @@ class MultiFaceDisplay {
         const text1 = "חזרות במדיה";
         const text2 = "גליון 04";
         //random between text1 and text2
-        
+
         // Get device pixel ratio for high-DPI support
         const pixelRatio = window.devicePixelRatio || 1;
-        
+
         // Create variations of the same text with different styling
         for (let i = 0; i < this.PIXELATION_TEXT_PANEL_COUNT; i++) {
             let text = (i % 2 === 0) ? text1 : text2; // Deterministic alternation
@@ -1758,13 +1758,13 @@ class MultiFaceDisplay {
                 '#444', // Dark gray
                 '#ddddd1', // Dark purple
             ];
-            
-            ctx.fillStyle = backgrounds[i%2];
+
+            ctx.fillStyle = backgrounds[i % 2];
             ctx.fillRect(0, 0, width, height);
 
             // Configure text rendering
             const fontSize = Math.min(width, height) * 0.15;
-            ctx.fillStyle = backgrounds[(i+1)%2];
+            ctx.fillStyle = backgrounds[(i + 1) % 2];
             ctx.font = `${fontSize}px ${this.fontConfig.author.name}, Arial, sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -1772,7 +1772,7 @@ class MultiFaceDisplay {
             // Draw the text centered
             // ctx.fillText(text, width / 2, height / 2);
             this.drawWrappedTextLarge(ctx, text, width / 2, height / 2, width * 0.9, Math.min(width, height) * 0.12);
-            
+
             // Create texture
             const texture = new THREE.CanvasTexture(canvas);
             texture.needsUpdate = true;
@@ -1805,7 +1805,7 @@ class MultiFaceDisplay {
 
         // Configure text styling based on style parameter
         let fontSize, fontFamily, textColor, strokeColor, strokeWidth;
-        
+
         switch (style) {
             case 'broadcast':
                 fontSize = Math.min(width, height) * 0.08;
@@ -1849,7 +1849,7 @@ class MultiFaceDisplay {
             ctx.lineWidth = strokeWidth;
             ctx.strokeText(text, x, y);
         }
-        
+
         ctx.fillStyle = textColor;
         ctx.fillText(text, x, y);
 
@@ -1894,10 +1894,10 @@ class MultiFaceDisplay {
         while (positions.length < panelCount && attempts < maxAttempts) {
             attempts++;
             const randomPos = Math.floor(Math.random() * totalCount);
-            
+
             // Calculate row for this position
             const row = Math.floor(randomPos / cols);
-            
+
             // Skip if position is already used, in the avoided row, or is the bottom-left panel
             if (used.has(randomPos) || row === avoidRow || randomPos === bottomLeftIndex) {
                 continue;
@@ -2269,15 +2269,15 @@ class MultiFaceDisplay {
             //         // Extreme wave distortion
             //         uv.x += sin(uv.y * 20.0 + uTime * 4.0) * 0.08;
             //         uv.y += cos(uv.x * 15.0 + uTime * 3.0) * 0.06;
-                    
+
             //         // Glitchy color separation
             //         vec4 colorR = texture2D(uTexture, uv + vec2(0.01, 0.0));
             //         vec4 colorG = texture2D(uTexture, uv);
             //         vec4 colorB = texture2D(uTexture, uv - vec2(0.01, 0.0));
-                    
+
             //         vec3 glitch = vec3(colorR.r, colorG.g, colorB.b);
             //         glitch = pow(glitch, vec3(0.7)); // Intensify
-                    
+
             //         // Mix between black and the effect based on reveal
             //         vec3 finalColor = mix(vec3(0.0), glitch, uReveal);
             //         gl_FragColor = vec4(finalColor, 1.0);
@@ -2323,7 +2323,7 @@ class MultiFaceDisplay {
             this.updateZoomMode();
         } else if (this.isPrimitiveMode) {
             this.updatePrimitiveMode();
-        } else {    
+        } else {
             // Update shader uniforms for effects mode
             this.facePlanes.forEach((faceData, index) => {
                 if (faceData.effectMaterial.uniforms.uTime) {
@@ -2332,7 +2332,7 @@ class MultiFaceDisplay {
                 }
             });
         }
-        
+
         this.renderer.render(this.scene, this.camera);
     }
 
@@ -2590,11 +2590,11 @@ class MultiFaceDisplay {
             // console.log('⚠️ Can only reinitialize in zoom mode');
             return;
         }
-    
+
         // console.log('🔄 Reinitializing zoom positions...');
         this.zoomSettings = []; // Clear existing settings
         this.zoomInitialized = false; // Reset initialization flag
-    
+
         // Trigger one fresh detection
         this.detectFaces().then(faces => {
             this.detectedFaces = faces;
@@ -2675,7 +2675,7 @@ class MultiFaceDisplay {
         // Store raw mouse coordinates for cursor-repelling effect
         this.rawMouseX = event.clientX;
         this.rawMouseY = event.clientY;
-        
+
         // Calculate mouse position in normalized device coordinates (-1 to +1)
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -2703,16 +2703,16 @@ class MultiFaceDisplay {
                 face => face.mesh === intersects[0].object
             );
 
-            if (intersectedFace && intersectedFace.isTextPanel && !this.isPixelationMode) {
+            if (intersectedFace && intersectedFace.isTextPanel) {
                 // Get the index of the hovered panel
                 const hoveredIndex = this.facePlanes.indexOf(intersectedFace);
-                
+
                 // Check if this panel is a twin of the currently hovered panel
-                const isTwinPanel = this.currentHoveredPanel && 
-                    intersectedFace.pairInfo && 
+                const isTwinPanel = this.currentHoveredPanel &&
+                    intersectedFace.pairInfo &&
                     this.currentHoveredPanel.pairInfo &&
                     intersectedFace.pairInfo.pairIndex === this.currentHoveredPanel.pairInfo.pairIndex;
-                
+
                 if (isTwinPanel) {
                     // Keep the same 3x3 overlay position - just update the stored panel
                     this.currentHoveredPanel = intersectedFace;
@@ -2720,25 +2720,25 @@ class MultiFaceDisplay {
                 } else {
                     // Calculate 3x3 grid around this panel
                     const gridInfo = this.calculate3x3Grid(hoveredIndex);
-                    
+
                     if (gridInfo && gridInfo.indices.length > 0) {
                         // Check if this is a different area than currently hovered
-                        const isDifferentArea = !this.hoveredArea || 
+                        const isDifferentArea = !this.hoveredArea ||
                             !this.arraysEqual(this.hoveredArea.indices, gridInfo.indices);
-                        
+
                         if (isDifferentArea) {
                             // Hide previous overlay
                             this.hide3x3Overlay();
-                            
+
                             // Get article info for the hovered panel
                             const articleInfo = this.getArticleInfoFromPanel(intersectedFace);
-                            
+
                             // Show new overlay with article info
                             this.show3x3Overlay(gridInfo, articleInfo);
-                            
+
                             // Store the currently hovered panel
                             this.currentHoveredPanel = intersectedFace;
-                            
+
                             // console.log(`3x3 overlay shown around panel ${hoveredIndex} for article:`, articleInfo?.title);
                         }
                     }
@@ -2766,27 +2766,79 @@ class MultiFaceDisplay {
     // Get article information from a hovered panel
     getArticleInfoFromPanel(faceData) {
         if (!faceData.isTextPanel || !faceData.textPanel) return null;
-        
+
+        // Handle pixelation text panels specially
+        if (faceData.textPanel.type === 'pixelation') {
+            // Create appropriate article info for pixelation panels
+            const pixelationTexts = ["חזרות במדיה", "גליון 04"];
+            const text = pixelationTexts[faceData.textPanel.index % pixelationTexts.length];
+
+            // Different sentences for each panel
+            const pixelationSentences = [
+                // Panel 0
+                [
+                    { title: "עורכים:", names: "ענת זנגר, ניר פרבר" },
+                    { title: "עורכים מייסדים:", names: "ענת זנגר, ניר פרבר" }
+                ],
+                // Panel 1
+                [
+                    { title: "הפקה:", names: "ליאור פרלשטיין" },
+                    { title: "אוצר פרויקט \"ואל מסך תשוב\":", names: "אופיר פלדמן" }
+                ],
+                // Panel 2
+                [
+                    { title: "חברי המערכת:", names: "ענת זנגר, ניר פרבר, יעל לוי, עידו לויט, אורי לוין" },  
+                    { title: "מערכת צעירה:", names: "עומר גורי, ליאור פרלשטיין, מישל צ'יקו, טל רז" }
+                ],
+                // Panel 3
+                [
+                    { title: "ועדה אקדמית:", names: "דר פבלו אוטין, דר שי בידרמן, דר בועז חגין, דר דן חיוטין, דר יעל לוי, דר עידו לויט, דר אורי לוין, דר אוהד לנדסמן, דר מירי מוהבן שקד" }
+                ],
+                // Panel 4
+                [
+                    { title: "עורכת לשון:", names: "רונית רוזנטל" },
+                    { title: "תרגום ועריכה לשונית באנגלית:", names: "אורית פרידלנד" }
+                ],
+                // Panel 5
+                [
+                    { title: "עיצוב גרפי:", names: "עמרי ברגמן" }
+                ]
+            ];
+
+            // Use different sentences based on panel index
+            const sentences = pixelationSentences[faceData.textPanel.index % pixelationSentences.length];
+
+            return {
+                title: text,
+                author: "מחזור 03",
+                excerpt: "פרויקט גמר בעיצוב חזותי דיגיטלי העוסק בחזרות במדיה ובהעתקות שלהן",
+                link: "#",
+                articleSentences: sentences
+            };
+        }
+
         const currentMode = this.getCurrentModeKey();
         const articles = this.modeArticles[currentMode];
         const articleIndex = faceData.textPanel.index;
-        
+
         if (articleIndex >= 0 && articleIndex < articles.length) {
             return articles[articleIndex];
         }
-        
+
         return null;
     }
 
     getPanelPair(faceData) {
         if (!faceData.isTextPanel || !faceData.pairInfo) {
-            return { title: faceData.textPanel?.type === 'title' ? faceData : null, 
-                     author: faceData.textPanel?.type === 'author' ? faceData : null };
+            return {
+                title: faceData.textPanel?.type === 'title' ? faceData : null,
+                author: faceData.textPanel?.type === 'author' ? faceData : null
+            };
         }
 
         // Find the partner panel
-        const partnerPanel = this.facePlanes.find(face => 
-            face.isTextPanel && 
+        const partnerPanel = this.facePlanes.find(face =>
+            face.isTextPanel &&
             face.pairInfo &&
             face.pairInfo.myPosition === faceData.pairInfo.partnerPosition
         );
@@ -2823,25 +2875,25 @@ class MultiFaceDisplay {
 
     applyBoldTextToPanel(faceData) {
         if (!faceData || !faceData.isTextPanel || !faceData.boldTexture) return;
-        
+
         // Switch to bold texture with smooth transition
         const material = faceData.mesh.material;
         if (material.uniforms && material.uniforms.uTexture) {
             material.uniforms.uTexture.value = faceData.boldTexture;
         }
-        
+
         // console.log(`Applied bold text to ${faceData.textPanel.type} panel`);
     }
 
     resetTextToRegular(faceData) {
         if (!faceData || !faceData.isTextPanel || !faceData.originalTexture) return;
-        
+
         // Switch back to regular texture
         const material = faceData.mesh.material;
         if (material.uniforms && material.uniforms.uTexture) {
             material.uniforms.uTexture.value = faceData.originalTexture;
         }
-        
+
         // console.log(`Reset to regular text for ${faceData.textPanel.type} panel`);
     }
 
@@ -2853,7 +2905,7 @@ class MultiFaceDisplay {
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
         const aspectRatio = screenWidth / screenHeight;
-        
+
         // Get face size (same calculation as in createFacePlanes)
         const totalPixels = screenWidth * screenHeight;
         let targetFaceSize;
@@ -2888,7 +2940,7 @@ class MultiFaceDisplay {
             for (let col = 0; col < 3; col++) {
                 const panelCol = startCol + col;
                 const panelRow = startRow + row;
-                
+
                 // Make sure we don't exceed bounds
                 if (panelCol < cols && panelRow < rows) {
                     const panelIndex = panelRow * cols + panelCol;
@@ -2920,7 +2972,7 @@ class MultiFaceDisplay {
         const pixelRatio = window.devicePixelRatio || 1;
         const canvasWidth = Math.floor(worldWidth * 200 * pixelRatio); // Convert world units to pixels
         const canvasHeight = Math.floor(worldHeight * 200 * pixelRatio);
-        
+
         const canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
@@ -2934,11 +2986,11 @@ class MultiFaceDisplay {
         // Draw 3x3 grid lines (2 horizontal + 2 vertical lines)
         const actualWidth = canvasWidth / pixelRatio;
         const actualHeight = canvasHeight / pixelRatio;
-        
+
         ctx.strokeStyle = '#999999'; // Light gray color for grid lines
         ctx.lineWidth = 1;
         ctx.globalAlpha = 0.6; // Make lines subtle
-        
+
         // Draw 2 vertical lines to divide into 3 columns
         const colWidth = actualWidth / 3;
         ctx.beginPath();
@@ -2947,7 +2999,7 @@ class MultiFaceDisplay {
         ctx.moveTo(colWidth * 2, 0);
         ctx.lineTo(colWidth * 2, actualHeight);
         ctx.stroke();
-        
+
         // Draw 2 horizontal lines to divide into 3 rows
         const rowHeight = actualHeight / 3;
         ctx.beginPath();
@@ -2956,30 +3008,30 @@ class MultiFaceDisplay {
         ctx.moveTo(0, rowHeight * 2);
         ctx.lineTo(actualWidth, rowHeight * 2);
         ctx.stroke();
-        
+
         // Reset alpha for text drawing
         ctx.globalAlpha = 1.0;
 
         // Configure text styling
         const fontSize = Math.min(canvasWidth, canvasHeight) / pixelRatio * 0.05; // Responsive font size
         const fontFamily = this.fontsLoaded ? this.fontConfig.scentence.name : 'Arial, sans-serif';
-        
+
         // console.log('🎨 3x3 Canvas text styling:', {
         //     fontsLoaded: this.fontsLoaded,
         //     fontFamily: fontFamily,
         //     fontSize: fontSize,
         //     actualFont: `${fontSize}px ${fontFamily}`
         // });
-        
+
         ctx.fillStyle = '#444';
         ctx.font = `${fontSize}px ${fontFamily}`; // Removed 'bold' to use the font's natural weight
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        
+
         // Set RTL direction for Hebrew text
         ctx.direction = 'rtl';
         ctx.textAlign = 'right'; // Keep center alignment even with RTL
-        
+
         // Test if the font is actually available
         if (this.fontsLoaded && !document.fonts.check(`${fontSize}px "${fontFamily}"`)) {
             console.warn(`⚠️ Font "${fontFamily}" not available, falling back to Arial`);
@@ -2990,21 +3042,31 @@ class MultiFaceDisplay {
             "זהו הטקסט הראשון שמתפרש על פני 9 הפאנלים באזור.",
             "המשפט השני ממשיך ויוצר טקסט רציף על פני כל האזור."
         ]; // Default sentences
-        
+
         // Use articleSentences directly from the article info if available
         if (articleInfo && articleInfo.articleSentences && Array.isArray(articleInfo.articleSentences)) {
             sentences = articleInfo.articleSentences;
         }
-        
-        // Process Hebrew text to fix RTL punctuation issues
-        const fullText = this.fixHebrewPunctuation(sentences.join(' '));
-        
-        // Draw text with line wrapping
-        this.drawWrappedTextLarge(ctx, fullText, 
-            (canvasWidth / pixelRatio) / 1.15, 
-            (canvasHeight / pixelRatio) / 2.2, 
-            (canvasWidth / pixelRatio) * 0.7, 
-            fontSize * 1.1);
+
+        // Check if we have structured content (title/names objects)
+        const isStructuredContent = sentences.length > 0 && sentences[0] && typeof sentences[0] === 'object' && sentences[0].title;
+
+        if (isStructuredContent) {
+            // Handle structured content with different fonts for titles and names
+            this.drawStructuredTextLarge(ctx, sentences, 
+                (canvasWidth / pixelRatio) / 1.15,
+                (canvasHeight / pixelRatio) / 2.2,
+                (canvasWidth / pixelRatio) * 0.7,
+                fontSize);
+        } else {
+            // Handle regular text content (existing logic)
+            const fullText = this.fixHebrewPunctuation(sentences.join(' '));
+            this.drawWrappedTextLarge(ctx, fullText,
+                (canvasWidth / pixelRatio) / 1.15,
+                (canvasHeight / pixelRatio) / 2.2,
+                (canvasWidth / pixelRatio) * 0.7,
+                fontSize * 1.1);
+        }
 
         return canvas;
     }
@@ -3013,7 +3075,7 @@ class MultiFaceDisplay {
     fixHebrewPunctuation(text) {
         // Add RTL mark (U+200F) before punctuation to ensure proper RTL behavior
         const rtlMark = '\u200F';
-        
+
         // Replace punctuation with RTL-marked versions
         return text
             .replace(/,/g, rtlMark + ',')
@@ -3064,6 +3126,90 @@ class MultiFaceDisplay {
         });
     }
 
+    // Draw structured text with different fonts for titles and names
+    drawStructuredTextLarge(ctx, structuredSentences, x, y, maxWidth, fontSize) {
+        const lineHeight = fontSize * 1.2;
+        const titleFont = this.fontsLoaded ? this.fontConfig.scentence.name : 'Arial, sans-serif';
+        const authorFont = this.fontsLoaded ? this.fontConfig.author.name : 'Arial, sans-serif';
+        
+        // Collect all text lines with their styling (including wrapped lines)
+        const textLines = [];
+        
+        structuredSentences.forEach(sentenceObj => {
+            // Add title (single line, usually short)
+            textLines.push({
+                text: this.fixHebrewPunctuation(sentenceObj.title),
+                font: `${fontSize}px ${titleFont}`,
+                isTitle: true
+            });
+            
+            // Add names with text wrapping
+            const namesText = this.fixHebrewPunctuation(sentenceObj.names);
+            ctx.font = `${fontSize}px ${authorFont}`; // Set font for measuring
+            
+            // Wrap the names text
+            const wrappedNames = this.wrapText(ctx, namesText, maxWidth);
+            wrappedNames.forEach(line => {
+                textLines.push({
+                    text: line,
+                    font: `${fontSize}px ${authorFont}`,
+                    isTitle: false
+                });
+            });
+            
+            // Add empty line between sentence objects for spacing
+            textLines.push({
+                text: '',
+                font: `${fontSize}px ${titleFont}`,
+                isTitle: true
+            });
+        });
+        
+        // Remove the last empty line
+        if (textLines.length > 0 && textLines[textLines.length - 1].text === '') {
+            textLines.pop();
+        }
+        
+        // Calculate total height needed
+        const totalHeight = textLines.length * lineHeight;
+        const startY = y - totalHeight / 2 + lineHeight / 2;
+        
+        // Draw each line
+        textLines.forEach((line, index) => {
+            if (line.text === '') return; // Skip empty lines
+            
+            // Set font for this line
+            ctx.font = line.font;
+            
+            // Draw the text
+            ctx.fillText(line.text, x, startY + index * lineHeight);
+        });
+    }
+
+    // Helper method to wrap text into multiple lines
+    wrapText(ctx, text, maxWidth) {
+        const words = text.split(' ');
+        let lines = [];
+        let currentLine = '';
+
+        for (let word of words) {
+            const testLine = currentLine + word + ' ';
+            const metrics = ctx.measureText(testLine);
+
+            if (metrics.width > maxWidth && currentLine !== '') {
+                lines.push(currentLine.trim());
+                currentLine = word + ' ';
+            } else {
+                currentLine = testLine;
+            }
+        }
+        if (currentLine.trim() !== '') {
+            lines.push(currentLine.trim());
+        }
+
+        return lines;
+    }
+
     // Create and show overlay plane - MUCH SIMPLER APPROACH
     show3x3Overlay(gridInfo, articleInfo = null) {
         // console.log(`Showing 3x3 overlay for ${gridInfo.indices.length} panels`);
@@ -3072,15 +3218,15 @@ class MultiFaceDisplay {
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
         const aspectRatio = screenWidth / screenHeight;
-        
+
         // World dimensions (same as in createFacePlanes)
         const worldWidth = 10;
         const worldHeight = worldWidth / aspectRatio;
-        
+
         // Panel dimensions in world coordinates (same as in createFacePlanes)
         const faceWorldWidth = worldWidth / gridInfo.cols;
         const faceWorldHeight = worldHeight / gridInfo.rows;
-        
+
         // Overlay dimensions (exactly 3x3 panels)
         const overlayWorldWidth = faceWorldWidth * 3;
         const overlayWorldHeight = faceWorldHeight * 3;
@@ -3088,13 +3234,13 @@ class MultiFaceDisplay {
         // Calculate overlay position using EXACT same logic as createFacePlanes
         const startX = -worldWidth / 2 + faceWorldWidth / 2;
         const startY = worldHeight / 2 - faceWorldHeight / 2;
-        
+
         // Calculate the EXACT center of the 3x3 area by looking at the corners
         const leftmostX = startX + gridInfo.startCol * faceWorldWidth;
         const rightmostX = startX + (gridInfo.startCol + 2) * faceWorldWidth;
         const topmostY = startY - gridInfo.startRow * faceWorldHeight;
         const bottommostY = startY - (gridInfo.startRow + 2) * faceWorldHeight;
-        
+
         // Center is exactly between the corners
         const overlayX = (leftmostX + rightmostX) / 2;
         const overlayY = (topmostY + bottommostY) / 2;
@@ -3144,7 +3290,7 @@ class MultiFaceDisplay {
             }
             this.overlayMaterial.dispose();
         }
-        
+
         // Reset references
         this.overlayPlane = null;
         this.overlayMaterial = null;
@@ -3180,7 +3326,7 @@ class MultiFaceDisplay {
                 const articleUrls = {
                     "דינמיקת החזרה כאסטרטגיה של דימוי הגוף הנשי השמן": "articles/Influences/fatFemaleBody.html",
                     "בחזרה ל'טווין פיקס' דרך הקריסטל": "articles/series/twinPeaks.html",
-                    "101 דרכים להבחין בין 'פסיכו' של היצ'קוק ל'פסיכו' של גאס ואן סנט" : "articles/remake/psyco.html",
+                    "101 דרכים להבחין בין 'פסיכו' של היצ'קוק ל'פסיכו' של גאס ואן סנט": "articles/remake/psyco.html",
                     // Add more mappings as needed for your new articles
                 };
 
@@ -3199,7 +3345,7 @@ class MultiFaceDisplay {
     createCohesiveEffectMap(cols, rows, shaderCount) {
         const totalFaces = cols * rows;
         const effectMap = new Array(totalFaces);
-        
+
         // Choose a cohesive distribution strategy
         const strategies = [
             'random',       // Completely random effect assignment
@@ -3208,20 +3354,20 @@ class MultiFaceDisplay {
             'concentric',   // Effects radiate from center
             'diagonal'      // Effects flow diagonally
         ];
-        
+
         // Start with random strategy, then cycle through others
         if (!this.currentStrategyIndex) {
             this.currentStrategyIndex = 0; // Start with random
         }
-        
+
         const strategy = strategies[this.currentStrategyIndex];
         console.log("strategy: ", strategy);
         // Only increment strategy index when explicitly cycling through strategies (not on window resize)
         // this.currentStrategyIndex = (this.currentStrategyIndex + 1) % strategies.length;
-        
+
         // console.log(`🎨 Using ${strategy} effect distribution strategy`);
-        
-        switch(strategy) {
+
+        switch (strategy) {
             case 'random':
                 return this.createRandomEffects(cols, rows, shaderCount);
             case 'zonal':
@@ -3242,52 +3388,52 @@ class MultiFaceDisplay {
     createRandomEffects(cols, rows, shaderCount) {
         const totalFaces = cols * rows;
         const effectMap = new Array(totalFaces);
-        
+
         // Better pseudo-random with multiple hash functions to prevent clustering
         const seed = cols * 1000 + rows;
-        
+
         for (let i = 0; i < totalFaces; i++) {
             const col = i % cols;
             const row = Math.floor(i / cols);
-            
+
             // Multiple hash functions to scramble the distribution better
             let hash = seed;
             hash = ((hash ^ (col * 73856093)) * 19349663) ^ (row * 83492791);
             hash = ((hash ^ (i * 50331653)) * 28629151) ^ ((col + row) * 97563461);
             hash = Math.abs(hash);
-            
+
             // Convert to 0-1 range and pick effect
             const pseudoRandom = (hash % 982451653) / 982451653;
             effectMap[i] = Math.floor(pseudoRandom * shaderCount);
         }
-        
+
         return effectMap;
     }
 
     createZonalEffects(cols, rows, shaderCount) {
         const totalFaces = cols * rows;
         const effectMap = new Array(totalFaces);
-        
+
         // Divide screen into zones and assign effect families to each zone
         const zonesX = Math.min(3, Math.ceil(cols / 3)); // Max 3 horizontal zones
         const zonesY = Math.min(3, Math.ceil(rows / 3)); // Max 3 vertical zones
-        
+
         // Create effect families (related effects grouped together)
         const effectFamilies = [
             [0, 1, 5],      // Original + High Contrast + Extreme Saturation (Intensity family)
             [0, 2, 3],      // Original + Red Hell + Ice Cold (Color isolation family)  
             [0, 4, 6]       // Original + Inversion + Glitch (Digital distortion family)
         ];
-        
+
         for (let i = 0; i < totalFaces; i++) {
             const col = i % cols;
             const row = Math.floor(i / cols);
-            
+
             // Determine which zone this face belongs to
             const zoneX = Math.floor(col / (cols / zonesX));
             const zoneY = Math.floor(row / (rows / zonesY));
             const zoneIndex = (zoneX + zoneY * zonesX) % effectFamilies.length;
-            
+
             // Pick an effect from the zone's family (deterministic)
             const family = effectFamilies[zoneIndex];
             const seed = cols * 1000 + rows + i; // Position-based seed
@@ -3295,99 +3441,99 @@ class MultiFaceDisplay {
             const effectIndex = family[Math.floor(pseudoRandom * family.length)];
             effectMap[i] = effectIndex;
         }
-        
+
         return effectMap;
     }
 
     createGradientEffects(cols, rows, shaderCount) {
         const totalFaces = cols * rows;
         const effectMap = new Array(totalFaces);
-        
+
         // Create smooth transitions from one effect to another
         for (let i = 0; i < totalFaces; i++) {
             const col = i % cols;
             const row = Math.floor(i / cols);
-            
+
             // Create a gradient based on position
             const xProgress = col / (cols - 1);
             const yProgress = row / (rows - 1);
-            
+
             // Combine X and Y gradients
             const combinedProgress = (xProgress + yProgress) / 2;
-            
+
             // Map to shader index with smooth transitions
             const effectIndex = Math.floor(combinedProgress * (shaderCount - 1));
             effectMap[i] = Math.min(effectIndex, shaderCount - 1);
         }
-        
+
         return effectMap;
     }
 
     createSymmetricalEffects(cols, rows, shaderCount) {
         const totalFaces = cols * rows;
         const effectMap = new Array(totalFaces);
-        
+
         // Create symmetrical patterns
         const centerX = cols / 2;
         const centerY = rows / 2;
-        
+
         for (let i = 0; i < totalFaces; i++) {
             const col = i % cols;
             const row = Math.floor(i / cols);
-            
+
             // Calculate distance from center
             const distanceFromCenter = Math.sqrt(
                 Math.pow(col - centerX, 2) + Math.pow(row - centerY, 2)
             );
-            
+
             // Map distance to effect index
             const normalizedDistance = distanceFromCenter / Math.sqrt(centerX * centerX + centerY * centerY);
             const effectIndex = Math.floor(normalizedDistance * (shaderCount - 1));
             effectMap[i] = Math.min(effectIndex, shaderCount - 1);
         }
-        
+
         return effectMap;
     }
 
     createConcentricEffects(cols, rows, shaderCount) {
         const totalFaces = cols * rows;
         const effectMap = new Array(totalFaces);
-        
+
         const centerX = (cols - 1) / 2;
         const centerY = (rows - 1) / 2;
         const maxRadius = Math.sqrt(centerX * centerX + centerY * centerY);
-        
+
         for (let i = 0; i < totalFaces; i++) {
             const col = i % cols;
             const row = Math.floor(i / cols);
-            
+
             // Calculate distance from center
             const radius = Math.sqrt(
                 Math.pow(col - centerX, 2) + Math.pow(row - centerY, 2)
             );
-            
+
             // Create concentric rings of effects
             const ringIndex = Math.floor((radius / maxRadius) * shaderCount);
             effectMap[i] = Math.min(ringIndex, shaderCount - 1);
         }
-        
+
         return effectMap;
     }
 
     createDiagonalEffects(cols, rows, shaderCount) {
         const totalFaces = cols * rows;
         const effectMap = new Array(totalFaces);
-        
+
         for (let i = 0; i < totalFaces; i++) {
             const col = i % cols;
             const row = Math.floor(i / cols);
-            
+
             // Create diagonal bands
             const diagonalPosition = (col + row) % (shaderCount * 2);
             const effectIndex = Math.floor(diagonalPosition / 2);
             effectMap[i] = Math.min(effectIndex, shaderCount - 1);
         }
-        
+
         return effectMap;
     }
 
@@ -3592,7 +3738,7 @@ class MultiFaceDisplay {
         this.isEntranceAnimating = true;
         this.revealedPanels = new Map(); // Store panel index and animation start time
         this.lastRevealTime = Date.now();
-        
+
         // Set timing based on mode - much faster for non-pixelation modes
         if (fastMode || !this.isPixelationMode) {
             this.currentEntranceSpeed = 15; // 15ms between reveals (very fast)
@@ -3603,7 +3749,7 @@ class MultiFaceDisplay {
             this.currentRevealDuration = 800; // 800ms (original)
             // console.log('🐌 Using SLOW entrance animation (pixelation mode)');
         }
-        
+
         // Reset all panels to black (reveal = 0.0) - works for ALL materials now
         this.facePlanes.forEach((faceData, index) => {
             if (!faceData.isTextPanel) {
@@ -3620,7 +3766,7 @@ class MultiFaceDisplay {
                 if (faceData.zoomMaterial && faceData.zoomMaterial.uniforms.uReveal) {
                     faceData.zoomMaterial.uniforms.uReveal.value = 0.0;
                 }
-                
+
                 // For materials without uReveal, temporarily hide the mesh
                 if (!this.materialHasReveal(faceData.mesh.material)) {
                     faceData.mesh.material.opacity = 0.0;
@@ -3631,7 +3777,7 @@ class MultiFaceDisplay {
                 // Text panels
                 faceData.textMaterial.uniforms.uReveal.value = 0.0;
             }
-            
+
             // Character overlay opacity
             if (faceData.overlayPlane && faceData.isCharacterPanel) {
                 faceData.overlayPlane.material.opacity = 0.0;
@@ -3646,15 +3792,15 @@ class MultiFaceDisplay {
 
     updateEntranceAnimation() {
         if (!this.isEntranceAnimating) return;
-        
+
         const currentTime = Date.now();
-        
+
         // Get indices of ALL panels (both video and text) in the main facePlanes array
         const allPanelIndices = [];
         this.facePlanes.forEach((face, index) => {
             allPanelIndices.push(index);
         });
-        
+
         // Check if it's time to start revealing a new panel
         if (currentTime - this.lastRevealTime > this.currentEntranceSpeed) {
             if (this.revealedPanels.size < allPanelIndices.length) {
@@ -3665,7 +3811,7 @@ class MultiFaceDisplay {
                     randomPanelIndex = allPanelIndices[Math.floor(Math.random() * allPanelIndices.length)];
                     attempts++;
                 } while (this.revealedPanels.has(randomPanelIndex) && attempts < 100);
-                
+
                 if (!this.revealedPanels.has(randomPanelIndex)) {
                     // Start revealing this panel
                     this.revealedPanels.set(randomPanelIndex, currentTime);
@@ -3676,19 +3822,19 @@ class MultiFaceDisplay {
                 }
             }
         }
-        
+
         // Update all panels that are currently animating
         this.revealedPanels.forEach((startTime, panelIndex) => {
             const faceData = this.facePlanes[panelIndex];
             if (faceData) {
                 const elapsed = currentTime - startTime;
                 const progress = Math.min(elapsed / this.currentRevealDuration, 1.0);
-                
+
                 // Ease-in-out cubic easing function
-                const easedProgress = progress < 0.5 
-                    ? 4 * progress * progress * progress 
+                const easedProgress = progress < 0.5
+                    ? 4 * progress * progress * progress
                     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                
+
                 // Update the appropriate material based on panel type
                 if (!faceData.isTextPanel) {
                     // Video panels - update any material that has uReveal
@@ -3704,7 +3850,7 @@ class MultiFaceDisplay {
                     if (faceData.zoomMaterial && faceData.zoomMaterial.uniforms.uReveal) {
                         faceData.zoomMaterial.uniforms.uReveal.value = easedProgress;
                     }
-                    
+
                     // For materials without uReveal, animate opacity
                     if (faceData._needsOpacityAnimation) {
                         faceData.mesh.material.opacity = easedProgress;
@@ -3713,22 +3859,22 @@ class MultiFaceDisplay {
                     // Text panels
                     faceData.textMaterial.uniforms.uReveal.value = easedProgress;
                 }
-                
+
                 // Also update character overlay opacity if it exists
                 if (faceData.overlayPlane && faceData.isCharacterPanel) {
                     faceData.overlayPlane.material.opacity = easedProgress * 0.95;
                 }
             }
         });
-        
+
         // Check if animation is complete
-        const allFullyRevealed = Array.from(this.revealedPanels.values()).every(startTime => 
+        const allFullyRevealed = Array.from(this.revealedPanels.values()).every(startTime =>
             currentTime - startTime >= this.currentRevealDuration
         );
-        
+
         if (this.revealedPanels.size === allPanelIndices.length && allFullyRevealed) {
             this.isEntranceAnimating = false;
-            
+
             // Clean up animation flags and ensure all panels are fully visible
             this.facePlanes.forEach((faceData) => {
                 if (faceData._needsOpacityAnimation) {
@@ -3736,16 +3882,16 @@ class MultiFaceDisplay {
                     faceData._needsOpacityAnimation = false;
                 }
             });
-            
-            const mode = this.isPixelationMode ? 'pixelation' : 
-                        this.isDelayMode ? 'delay' : 
-                        this.isZoomMode ? 'zoom' : 
+
+            const mode = this.isPixelationMode ? 'pixelation' :
+                this.isDelayMode ? 'delay' :
+                    this.isZoomMode ? 'zoom' :
                         this.isPrimitiveMode ? 'primitive' : 'effects';
             // console.log(`✅ Entrance animation complete for ${mode} mode!`);
         }
     }
 
-        createCharacterTexture(character, width, height, style = 'headline') {
+    createCharacterTexture(character, width, height, style = 'headline') {
         // Check cache first
         const cacheKey = `char_${character}_${width}_${height}_${style}`;
         if (this.overlayTextCache.has(cacheKey)) {
@@ -3768,7 +3914,7 @@ class MultiFaceDisplay {
 
         // Configure styling for Hebrew characters
         let fontSize, fontFamily, textColor, strokeColor, strokeWidth;
-        
+
         switch (style) {
             case 'headline':
                 fontSize = Math.min(width, height) * 1; // Even bigger - almost completely fill panel
@@ -3813,7 +3959,7 @@ class MultiFaceDisplay {
         //     ctx.lineWidth = strokeWidth;
         //     ctx.strokeText(character, x, y);
         // }
-        
+
         ctx.fillStyle = textColor;
         ctx.fillText(character, x, y);
 
@@ -3839,25 +3985,25 @@ class MultiFaceDisplay {
         const positions = [];
         const usedColumns = new Set(); // Track used columns to avoid conflicts
         const totalCharacters = characters.length;
-        
+
         // console.log(`🎲 Generating scattered positions for ${totalCharacters} characters in ${cols}x${rows} grid...`);
-        
+
         // Get all text panel positions to avoid them completely
         const textPanelPositions = new Set();
-        
+
         // Use the ACTUAL text panel positions from textPanelMap
         if (textPanelMap) {
             for (let [panelIndex, textPanel] of textPanelMap) {
                 textPanelPositions.add(panelIndex);
             }
         }
-        
+
         // Also avoid bottom-left reserved panel
         const bottomLeftIndex = (rows - 1) * cols;
         textPanelPositions.add(bottomLeftIndex);
-        
+
         // console.log(`🚫 Avoiding ${textPanelPositions.size} actual text panel positions:`, Array.from(textPanelPositions).sort((a,b) => a-b));
-        
+
         // Create a sequence of available columns for Hebrew RTL flow
         // Start from right (highest column) and work left
         const availableColumns = [];
@@ -3875,14 +4021,14 @@ class MultiFaceDisplay {
                 availableColumns.push(col);
             }
         }
-        
+
         // console.log(`📊 Available columns for characters (RTL): [${availableColumns.join(', ')}]`);
-        
+
         // Ensure we have enough columns for all characters
         if (availableColumns.length < totalCharacters) {
             console.warn(`⚠️ Only ${availableColumns.length} columns available for ${totalCharacters} characters!`);
         }
-        
+
         // Check if gaps will cause overflow - if so, disable gaps
         let finalGapProbability = forceNoGaps ? 0 : this.characterGapProbability;
         if (!forceNoGaps && this.characterGapProbability > 0) {
@@ -3893,42 +4039,42 @@ class MultiFaceDisplay {
                 finalGapProbability = 0;
             }
         }
-        
+
         if (forceNoGaps) {
             // console.log(`🔄 Restarting positioning without gaps to maintain RTL flow...`);
         }
-        
+
         // Place characters in Hebrew RTL order with scattered rows and optional gaps
         let currentColumnIndex = 0;
-        
+
         for (let charIndex = 0; charIndex < totalCharacters; charIndex++) {
             const character = characters[charIndex];
             let position = null;
-            
+
             // Add random gaps between characters (only if no overflow risk)
             if (charIndex > 0 && Math.random() < finalGapProbability) {
                 const gapsToSkip = Math.floor(Math.random() * 2) + 1; // Skip 1-2 columns
                 currentColumnIndex += gapsToSkip;
                 // console.log(`💨 Adding ${gapsToSkip} column gap(s) before "${character}"`);
             }
-            
-                         // Get the target column (simple sequential with proper bounds checking)
-             let targetCol;
-             if (currentColumnIndex >= availableColumns.length) {
-                 if (!forceNoGaps) {
-                     // If we exceed available columns, restart without gaps
-                     // console.log(`🔄 Column overflow detected - restarting without gaps...`);
-                     return this.generateScatteredCharacterPositions(characters, cols, rows, totalPanels, textPanelMap, true);
-                 } else {
-                     // Already trying without gaps and still overflow - use modulo positioning
-                     // console.log(`⚠️ Overflow even without gaps - using modulo positioning`);
-                     targetCol = availableColumns[charIndex % availableColumns.length];
-                 }
-             } else {
-                 targetCol = availableColumns[currentColumnIndex];
-                 currentColumnIndex++;
-             }
-            
+
+            // Get the target column (simple sequential with proper bounds checking)
+            let targetCol;
+            if (currentColumnIndex >= availableColumns.length) {
+                if (!forceNoGaps) {
+                    // If we exceed available columns, restart without gaps
+                    // console.log(`🔄 Column overflow detected - restarting without gaps...`);
+                    return this.generateScatteredCharacterPositions(characters, cols, rows, totalPanels, textPanelMap, true);
+                } else {
+                    // Already trying without gaps and still overflow - use modulo positioning
+                    // console.log(`⚠️ Overflow even without gaps - using modulo positioning`);
+                    targetCol = availableColumns[charIndex % availableColumns.length];
+                }
+            } else {
+                targetCol = availableColumns[currentColumnIndex];
+                currentColumnIndex++;
+            }
+
             // Find available rows in this column
             const availableRows = [];
             for (let row = 0; row < rows - 1; row++) { // Exclude last row
@@ -3937,12 +4083,12 @@ class MultiFaceDisplay {
                     availableRows.push(row);
                 }
             }
-            
+
             if (availableRows.length > 0) {
                 // Choose a random row from available ones
                 const chosenRow = availableRows[Math.floor(Math.random() * availableRows.length)];
                 const panelIndex = chosenRow * cols + targetCol;
-                
+
                 position = {
                     character: character,
                     index: charIndex,
@@ -3951,23 +4097,23 @@ class MultiFaceDisplay {
                     panelIndex: panelIndex,
                     char: character // For debugging
                 };
-                
+
                 usedColumns.add(targetCol);
                 positions.push(position);
                 // // console.log(`📝 Placed "${character}" (${charIndex + 1}/${totalCharacters}) at col ${targetCol}, row ${chosenRow} (panel ${panelIndex}) [column index: ${currentColumnIndex - 1}]`);
             } else {
                 console.warn(`⚠️ No available rows in column ${targetCol} for character "${character}"`);
-                
+
                 // Fallback: find ANY available video panel
                 let fallbackFound = false;
                 for (let row = 0; row < rows - 1 && !fallbackFound; row++) {
                     for (let col = 0; col < cols && !fallbackFound; col++) {
                         const panelIndex = row * cols + col;
-                        
-                        if (!textPanelPositions.has(panelIndex) && 
-                            !usedColumns.has(col) && 
+
+                        if (!textPanelPositions.has(panelIndex) &&
+                            !usedColumns.has(col) &&
                             panelIndex < totalPanels) {
-                            
+
                             position = {
                                 character: character,
                                 index: charIndex,
@@ -3976,7 +4122,7 @@ class MultiFaceDisplay {
                                 panelIndex: panelIndex,
                                 char: character
                             };
-                            
+
                             usedColumns.add(col);
                             positions.push(position);
                             // console.log(`✅ Fallback: "${character}" placed at col ${col}, row ${row}`);
@@ -3984,13 +4130,13 @@ class MultiFaceDisplay {
                         }
                     }
                 }
-                
+
                 if (!fallbackFound) {
                     console.error(`❌ Could not place character "${character}" anywhere!`);
                 }
             }
         }
-        
+
         // console.log(`✅ Generated ${positions.length}/${totalCharacters} scattered positions with Hebrew RTL flow`);
         // console.log(`📊 Used columns: [${Array.from(usedColumns).sort((a,b) => b-a).join(', ')}]`);
         return positions;
@@ -4001,7 +4147,7 @@ class MultiFaceDisplay {
         // Reset scattered positions when headline changes
         this.scatteredCharacterPositions = null;
         // console.log(`📝 Setting headline: ${headline}`);
-        
+
         if (this.isRunning && this.videoTexture) {
             // Recreate face planes with new headline
             this.createFacePlanes();
@@ -4014,11 +4160,11 @@ class MultiFaceDisplay {
             // console.log('❌ No headline set or character display disabled');
             return;
         }
-        
+
         // Force regeneration by clearing cached positions
         this.scatteredCharacterPositions = null;
         // console.log('🎲 Regenerating scattered character positions...');
-        
+
         if (this.isRunning && this.videoTexture) {
             // Recreate face planes with new scattered positions
             this.createFacePlanes();
@@ -4031,7 +4177,7 @@ class MultiFaceDisplay {
             // console.log('❌ Character display disabled');
             return;
         }
-        
+
         // Cycle through gap probabilities: 0% → 30% → 60% → 0%
         if (this.characterGapProbability === 0) {
             this.characterGapProbability = 0.3; // 30%
@@ -4040,13 +4186,13 @@ class MultiFaceDisplay {
         } else {
             this.characterGapProbability = 0; // 0% (no gaps)
         }
-        
+
         const percentage = Math.round(this.characterGapProbability * 100);
         // console.log(`💨 Character gap probability set to ${percentage}%`);
-        
+
         // Force regeneration with new gap setting
         this.scatteredCharacterPositions = null;
-        
+
         if (this.isRunning && this.videoTexture) {
             this.createFacePlanes();
         }
@@ -4055,9 +4201,9 @@ class MultiFaceDisplay {
     logCurrentState() {
         const currentMode = this.getCurrentModeKey();
         const strategies = ['random', 'zonal', 'gradient', 'symmetrical', 'concentric', 'diagonal'];
-        const currentStrategy = this.currentStrategyIndex !== undefined ? 
+        const currentStrategy = this.currentStrategyIndex !== undefined ?
             strategies[this.currentStrategyIndex] : 'random (default)';
-        
+
         console.log(`🔍 DEBUG STATE: Mode = "${currentMode}", Effect Strategy = "${currentStrategy}" (index: ${this.currentStrategyIndex || 0})`);
     }
 
@@ -4111,10 +4257,10 @@ function autoStartFromNavbar() {
     const urlParams = new URLSearchParams(window.location.search);
     const hasMode = urlParams.has('mode');
     const hasNav = urlParams.has('nav');
-    
+
     // Pixelation mode is already the default from constructor
     // console.log('🔲 Starting with Pixelation Mode (default)...');
-    
+
     if (hasMode || hasNav) {
         // console.log('🔗 User came from navbar, auto-starting camera...');
         // Start immediately - no delay
