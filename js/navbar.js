@@ -176,6 +176,11 @@ class UniversalNavbar {
         }
         
         // Check for specific article paths
+        if (currentPath.includes('editors.html')) {
+            console.log(`✅ Detected editors.html - returning "דבר העורכים"`);
+            return 'דבר העורכים'; // This is the editors page
+        }
+        
         if (currentPath.includes('fatFemaleBody.html')) {
             console.log(`✅ Detected fatFemaleBody.html - returning "השפעות"`);
             return 'השפעות'; // This article is in the "השפעות" section
@@ -460,6 +465,14 @@ class UniversalNavbar {
     handleNavClick(idx, navItem) {
         console.log(`🎯 Nav item clicked: ${navItem.headline} (${navItem.mode})`);
         
+        // Special case: "דבר העורכים" - navigate to editors page
+        if (navItem.headline === "דבר העורכים") {
+            console.log(`🎨 Navigating to editors page for: ${navItem.headline}`);
+            const editorsUrl = this.getEditorsUrl();
+            window.location.href = editorsUrl;
+            return;
+        }
+        
         // Special case: "ואל מסך תשוב" - navigate to static grid page
         if (navItem.headline === "ואל מסך תשוב") {
             console.log(`🎨 Navigating to static grid page for: ${navItem.headline}`);
@@ -652,6 +665,20 @@ class UniversalNavbar {
         } else {
             // We're in a subdirectory, need to go back to root
             return '../'.repeat(pathSegments.length) + 'articles/screen/static-grid.html';
+        }
+    }
+    
+    getEditorsUrl() {
+        const currentPath = window.location.pathname;
+        const directoryPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+        const pathSegments = directoryPath.split('/').filter(segment => segment.length > 0);
+        
+        if (pathSegments.length === 0) {
+            // We're in the root directory
+            return './articles/editors/editors.html';
+        } else {
+            // We're in a subdirectory, need to go back to root
+            return '../'.repeat(pathSegments.length) + 'articles/editors/editors.html';
         }
     }
     
