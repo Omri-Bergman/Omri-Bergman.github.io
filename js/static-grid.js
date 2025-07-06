@@ -65,7 +65,7 @@ class StaticGridLayout {
             { type: 'image', src: '../../images/Screen/Tal/1.webp', alt: 'תמונה 33' },
             { type: 'image', src: '../../images/Screen/Tal/2.webp', alt: 'תמונה 34' },
             { type: 'image', src: '../../images/Screen/Tal/3.webp', alt: 'תמונה 35' },
-            { type: 'image', src: '../../images/Screen/Tal/4.jpg', alt: 'תמונה 36' },
+            { type: 'image', src: '../../images/Screen/Tal/4.webp', alt: 'תמונה 36' },
             { type: 'image', src: '../../images/Screen/Tal/5.webp', alt: 'תמונה 37' },
             { type: 'text', title: '', content: 'אגדת חורבן ', author: ' דוד פולונסקי ומיכאל פאוסט', year: '2021', medium: ' סרט' },
             { type: 'image', src: '../../images/Screen/Agadat/0.webp', alt: 'תמונה 38' },
