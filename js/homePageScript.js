@@ -1739,14 +1739,19 @@ class MultiFaceDisplay {
         const text2 = "גליון 04";
         //random between text1 and text2
         
+        // Get device pixel ratio for high-DPI support
+        const pixelRatio = window.devicePixelRatio || 1;
         
         // Create variations of the same text with different styling
         for (let i = 0; i < this.PIXELATION_TEXT_PANEL_COUNT; i++) {
             let text = (i % 2 === 0) ? text1 : text2; // Deterministic alternation
             const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = width * pixelRatio;
+            canvas.height = height * pixelRatio;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
             const ctx = canvas.getContext('2d');
+            ctx.scale(pixelRatio, pixelRatio);
 
             // Different background colors for variation
             const backgrounds = [
@@ -1784,10 +1789,16 @@ class MultiFaceDisplay {
             return this.overlayTextCache.get(cacheKey);
         }
 
+        // Get device pixel ratio for high-DPI support
+        const pixelRatio = window.devicePixelRatio || 1;
+
         const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width * pixelRatio;
+        canvas.height = height * pixelRatio;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
         const ctx = canvas.getContext('2d');
+        ctx.scale(pixelRatio, pixelRatio);
 
         // Clear canvas (transparent background)
         ctx.clearRect(0, 0, width, height);
@@ -3741,10 +3752,16 @@ class MultiFaceDisplay {
             return this.overlayTextCache.get(cacheKey);
         }
 
+        // Get device pixel ratio for high-DPI support
+        const pixelRatio = window.devicePixelRatio || 1;
+
         const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width * pixelRatio;
+        canvas.height = height * pixelRatio;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
         const ctx = canvas.getContext('2d');
+        ctx.scale(pixelRatio, pixelRatio);
 
         // Clear canvas (transparent background - no background color!)
         ctx.clearRect(0, 0, width, height);
