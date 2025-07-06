@@ -1074,7 +1074,7 @@ class MultiFaceDisplay {
 
         if (isMobile) {
             // MOBILE: Smaller panels = MORE panels
-            targetFaceSize = 100; // Much smaller = more panels
+            targetFaceSize = 120; // Much smaller = more panels
         } else {
             // DESKTOP: Keep existing logic unchanged
             if (totalPixels > 3840 * 2160) { // 4K+
