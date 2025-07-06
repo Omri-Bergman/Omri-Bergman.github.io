@@ -1,0 +1,2593 @@
+@font-face {
+    font-family: 'TheBasics Display Thin';
+    src: url('fonts/TheBasics-DisplayThin.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'TheBasics Dots';
+    src: url('fonts/TheBasics-Dots.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'TheBasics-Regular';
+    src: url('fonts/TheBasics-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-Bold.otf') format('otf');
+    font-weight: bold;
+    font-style: normal;
+    /* font-display: swap; */
+}
+
+@font-face {
+    font-family: 'NarkissYair';
+    src: url('fonts/NarkissYair-Light-TRIAL.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NarkissYair';
+    src: url('fonts/NarkissYair-Bold-TRIAL.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NarkissYair';
+    src: url('fonts/NarkissYair-Regular-TRIAL.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yairnumssqurethin';
+    src: url('fonts/Yairnumssqurethin-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MasadaMono';
+    src: url('fonts/MasadaMono-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-DisplayThin.woff2') format('woff2');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-DisplayThinItalic.woff2') format('woff2');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-MediumItalic.woff2') format('woff2');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'TheBasics';
+    src: url('fonts/TheBasics-DisplayBlack.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* GretaTextH++L */
+@font-face {
+    font-family: 'GretaTextH+L';
+    src: url('fonts/GretaText-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GretaTextH+L';
+    src: url('fonts/GretaTextH+L-BoldItalic.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'GretaTextH+L';
+    src: url('fonts/GretaTextH+L-Light+.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GretaTextH+L';
+    src: url('fonts/GretaTextH+L-LightItalic--.woff2') format('woff2');
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+    font-family: Arial, sans-serif;
+} */
+
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    /* Prevent padding from enlarging elements */
+}
+
+* {
+    margin: 0;
+    /* Remove extra margin from everything (body, headings, etc...) */
+}
+
+img {
+    max-width: 100%;
+    /* Don't let images be more than their container's width */
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+    /* Break long words in headings & paragraphs */
+}
+
+ul {
+    /* Don't style unordered lists (good for nav menus!) */
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    /* No blue links! */
+    color: inherit;
+}
+
+/* ------- HOME PAGE ------- */
+
+#container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#controls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    display: none;
+}
+
+.control-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.mode-indicator {
+    font-size: 12px;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #ff5252;
+}
+
+button:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+#video {
+    display: none;
+}
+
+#info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    display: none;
+}
+
+#fps {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: monospace;
+    z-index: 1000;
+    display: none;
+}
+
+.fps-good {
+    color: #4CAF50;
+}
+
+.fps-ok {
+    color: #FF9800;
+}
+
+.fps-bad {
+    color: #F44336;
+}
+
+#center-display {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: fixed;
+    top: 13%;
+    z-index: 300;
+    display: none;
+    width: 100%;
+}
+
+.center-display-text {
+    font-family: 'MasadaMono', 'Caveat', cursive, sans-serif;
+    font-size: 12vw;
+    color: #ffffff;
+    letter-spacing: 0.1em;
+    text-align: right;
+    margin-right: 100px;
+    display: none;
+}
+
+
+/* ------- NAVBAR ------- */
+
+/* Corner button positioned at bottom-left */
+.navbar-corner-button {
+    position: fixed;
+    /* Position is set dynamically by JavaScript to match bottom-left panel */
+    z-index: 1000;
+    /* background: var(--accent-color); */
+    background: #91918B;
+    color: #fff;
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 0px;
+    font-family: 'TheBasics Display Thin', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    /* Text positioning and layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Ensure button doesn't interfere with existing content */
+    user-select: none;
+    /* Ensure button is absolutely flush with edges */
+    box-sizing: border-box;
+    outline: none;
+    /* Size and position are set dynamically by JavaScript to match panel dimensions */
+}
+
+.navbar-corner-button:hover {
+    background: #ffffff;
+    color: var(--accent-color);
+    font-family: 'TheBasics';
+    font-weight: 900;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Fullscreen grid overlay */
+.navbar-grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.navbar-grid-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+.navbar-grid-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    gap: 0;
+}
+
+.navbar-grid-square {
+    background: rgba(68, 68, 68, 0.1);
+    border: 1px solid rgba(68, 68, 68, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-grid-square.nav-item {
+    background: var(--accent-color);
+    color: #fff;
+    font-family: 'TheBasics Display Thin', sans-serif;
+    font-size: 1.3rem;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    word-wrap: break-word;
+    transition: all 0.3s ease;
+}
+
+.navbar-grid-square.nav-item:hover {
+    background: #ffffff;
+    color: var(--accent-color);
+    font-family: 'TheBasics';
+    font-weight: 900;
+    transform: scale(1.05);
+    z-index: 1001;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-grid-square.blank {
+    background: rgba(68, 68, 68, 0.05);
+    cursor: default;
+}
+
+.navbar-grid-square.blank:hover {
+    background: rgba(68, 68, 68, 0.1);
+}
+
+/* Close button */
+.navbar-close-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--accent-color);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-close-button:hover {
+    background: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Hide original navbar */
+nav {
+    display: none;
+}
+
+.navbar {
+    display: none;
+}
+
+/* Animation for grid squares appearing */
+@keyframes gridSquareAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.navbar-grid-square {
+    animation: gridSquareAppear 0.5s ease forwards;
+}
+
+/* Stagger animation delays */
+.navbar-grid-square:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.navbar-grid-square:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.navbar-grid-square:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.navbar-grid-square:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.navbar-grid-square:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.navbar-grid-square:nth-child(6) {
+    animation-delay: 0.3s;
+}
+
+.navbar-grid-square:nth-child(7) {
+    animation-delay: 0.35s;
+}
+
+.navbar-grid-square:nth-child(8) {
+    animation-delay: 0.4s;
+}
+
+.navbar-grid-square:nth-child(9) {
+    animation-delay: 0.45s;
+}
+
+.navbar-grid-square:nth-child(10) {
+    animation-delay: 0.5s;
+}
+
+/* Continue pattern for more squares... */
+
+/* Responsive text sizing */
+@media (max-width: 1200px) {
+    .navbar-grid-square.nav-item {
+        font-size: 1.1rem;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-grid-square.nav-item {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    /* Button size is now handled dynamically by JavaScript */
+}
+
+@media (max-width: 480px) {
+    .navbar-grid-square.nav-item {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    /* Button size is now handled dynamically by JavaScript */
+}
+
+/* ------- ARTICLE PAGE ------- */
+
+:root {
+    --primary-color: #160505;
+    --secondary-color: #444;
+    --accent-color: #444;
+    /* --background-color: #160505; */
+    --background-color: #ddddd1;
+    --paper-color: #ddddd1;
+    --border-color: #ddd;
+}
+
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */
+
+body {
+    font-family: 'GretaTextH+L', 'NarkissYair', 'Times New Roman', serif;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    direction: rtl;
+    color: var(--accent-color);
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: var(--background-color);
+}
+
+h1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    text-align: right;
+    font-family: 'TheBasics';
+    font-size: 9vw;
+    font-weight: 900;
+    /* margin-bottom: 100px;
+    margin-right: 20px;
+    margin-left: 100px; */
+    padding: 40px;
+    padding-top: 60px;
+    line-height: 0.78;
+    letter-spacing: -0.02em;
+    /* margin-top: 100px; */
+    background-color: var(--accent-color);
+    color: var(--background-color);
+    width: 50%;
+    height: 100%;
+    position: relative;
+    /* height: 25vh; */
+    /* color: var(--background-color); */
+}
+
+/* Specific styling for Twin Peaks article h1 */
+h1.twin-peaks-title {
+    font-size: 10.5vw;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    padding-top: 80px;
+    /* margin-bottom: 100px; */
+}
+
+h1.psyco-title {
+    font-size: 7.5vw;
+    line-height: 0.9;
+    /* letter-spacing: -0.02em;
+    padding-top: 80px; */
+    /* margin-bottom: 100px; */
+}
+
+h2 {
+    position: sticky;
+    top: 0;
+    font-family: 'TheBasics';
+    font-size: 44px;
+    font-weight: 600;
+    align-self: flex-end;
+    /* margin-right: 20px; */
+    /* margin-bottom: 100px; */
+    /* margin-top: 200px; */
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /* border-bottom: 1px solid var(--accent-color); */
+    background-color: var(--background-color);
+    /* border-left: 1px solid var(--accent-color); */
+    border-right: 1px solid var(--accent-color);
+    width: 50%;
+    z-index: 100;
+}
+
+p {
+    font-size: 24px;
+    /* color: #333; */
+    text-align: right;
+    font-weight: normal;
+    line-height: 1.2;
+}
+
+.bold-quotes {
+    font-feature-settings: "ss02";
+    direction: rtl;
+    unicode-bidi: embed;
+}
+
+.article-header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0px;
+    width: 100%;
+    height: 100vh;
+}
+
+.article-header-topic {
+    font-family: 'GretaTextH+L';
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent-color);
+    align-self: flex-end;
+}
+
+.article-header-author {
+    font-family: 'NarkissYair';
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.article-header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 50%;
+    font-family: 'NarkissYair';
+    height: 100%;
+    justify-content: space-around;
+}
+
+.article-header-text.twin-peaks-title .paragraph-start-indent {
+    font-size: 22px;
+    width: 55%;
+}
+
+.article-header-text.psyco-title .paragraph-start-indent {
+    font-size: 22px;
+    width: 65%;
+}
+
+.article-header-text .paragraph-start-indent {
+    width: 50%;
+    font-size: 22px;
+    /* This applies to paragraph-start-indent elements inside article-header-text */
+}
+
+.paragraph-start-indent {
+    text-indent: 0px;
+    padding-right: 20px;
+    padding-left: 30px;
+    /* font-size: 24px; */
+    /* text-align: justify; */
+}
+
+.movie-name {
+    font-family: 'NarkissYair';
+    /* font-style: italic; */
+    font-weight: 600;
+}
+
+.movie-credits {
+    font-family: 'NarkissYair';
+    /* font-style: italic; */
+    font-weight: 100;
+    /* display: none; */
+    display: inline;
+    font-size: 18px;
+    /* color: rgb(241, 30, 0); */
+}
+
+.article-content {
+    cursor: default;
+    width: 100vw;
+    min-height: 100vh;
+}
+
+.square-numbers {
+    font-family: 'Yairnumssqurethin';
+    /* font-size: 24px; */
+    font-weight: 100;
+    text-align: center;
+    /* color: var(--background-color); */
+}
+
+
+
+.article-content-first-section {
+    /* cursor: no-drop; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+
+.article-content-first-section-main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0px;
+    width: 100%;
+}
+
+.article-content-first-section-text {
+    width: 50%;
+}
+
+.first-section-sync-images-container {
+    width: 50%;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.image-details {
+    font-weight: 100;
+    font-size: 18px;
+}
+
+
+.article-content-second-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+.article-content-second-section-text {
+    width: 100%;
+}
+
+.article-content-second-section-text-01 {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    /* gap: 100px; */
+    width: 100%;
+    align-items: center;
+}
+
+.article-content-second-section-text-01-text {
+    width: 50%;
+}
+
+.article-content-second-section-text-01-notes {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 60px;
+    width: 50%;
+    align-items: flex-start;
+    align-self: flex-start;
+    margin-top: 100px;
+}
+
+.proportional-text-container.notes.note-width-big {
+    width: 60%;
+    display: block;
+    /* For block-level notes */
+}
+
+.flex-section-second-text-paragraphs-to-note {
+    /* font-family: 'TheBasics'; */
+    /* font-size: 22px;
+    font-weight: 600; */
+    text-decoration: underline;
+}
+
+/* .notes {
+    width: 45%;
+    font-size: 18px;
+    font-family: 'TheBasics';
+    font-weight: 100;
+    position: relative;
+} */
+
+
+
+
+/* ADD THESE NEW STYLES */
+.cursor-overlay {
+    position: absolute;
+    top: 0;
+    left: 150px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#notesPath {
+    stroke: red !important;
+    stroke-width: 0px !important;
+}
+
+.magic-cursor {
+    fill: #ff4444;
+    filter: drop-shadow(0 0 4px #ff4444);
+}
+
+.highlight {
+    /* background-color: #ffeb3b; */
+    transition: background-color 0.3s ease;
+}
+
+.highlight.active {
+    background-color: #2196f3;
+    color: white;
+}
+
+.echo-cursor-container {
+    position: relative;
+}
+
+.article-content-third-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+.article-content-third-section .paragraph-start-indent {
+    width: 49%;
+}
+
+/* Bordered list items for article content */
+.bordered-list {
+
+    padding: 30px 40px;
+    font-size: 26px;
+    /* border: 2px solid var(--background-color); */
+    /* border-radius: 0px; */
+    line-height: 1;
+    list-style: none;
+    color: var(--background-color);
+    background-color: var(--accent-color);
+    display: inline-block;
+    max-width: 50%;
+}
+
+.bordered-list-follow {
+    position: sticky;
+    top: 100px;
+}
+
+.bordered-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 20px;
+    width: 100%;
+    margin-left: 20px;
+    /* background-color: var(--accent-color); */
+}
+
+.article-content-forth-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+.article-content-fifth-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+.article-content-fifth-section-main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 100px;
+}
+
+.article-content-fifth-section-text {
+    width: 50%;
+    column-count: 2;
+    column-gap: 30px;
+    column-fill: balance;
+}
+
+.article-content-fifth-section-text-two-coloumns {
+    font-size: 24px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.article-content-fifth-section .paragraph-start-indent {
+    font-size: 24px;
+}
+
+.notes-fifth-section {
+    width: 65%;
+    font-size: 18px;
+    font-family: 'TheBasics';
+    font-weight: 100;
+    /* ADD THESE STYLES FOR THE MAGIC CURSOR */
+    position: relative;
+    align-items: center;
+    align-self: center;
+}
+
+.fifth-section-sync-images-container {
+    width: 25%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.image-details-fifth-section {
+    font-weight: 100;
+    font-size: 18px;
+}
+
+.article-content-sixth-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+.article-content-sixth-section-main {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+.article-content-sixth-section-text {
+    width: 100%;
+}
+
+.article-content-sixth-section-text-01 {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    /* gap: 100px; */
+    width: 100%;
+    align-items: center;
+}
+
+.article-content-sixth-section-text-01-text {
+    width: 50%;
+}
+
+.sixth-section-sync-images-container-image {
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    align-self: end;
+    z-index: -1;
+}
+
+.notes-sixth-section {
+    width: 45%;
+    font-size: 18px;
+    font-family: 'TheBasics';
+    font-weight: 100;
+    /* ADD THESE STYLES FOR THE MAGIC CURSOR */
+    position: relative;
+}
+
+.sixth-section-sync-images-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    /* This is required for the fake cursor positioning */
+    /* position: absolute; */
+    margin-bottom: -100px;
+}
+
+.article-content-seventh-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+}
+
+.article-content-seventh-section-main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+    margin-bottom: 60px;
+}
+
+.article-content-seventh-section-text {
+    width: 100%;
+    z-index: 30;
+    pointer-events: none;
+    color: var(--background-color);
+}
+
+.article-content-seventh-section-text-01 {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    /* gap: 100px; */
+    width: 100%;
+    /* align-items: center; */
+    justify-content: flex-start;
+    /* margin-right: 80px;   */
+}
+
+.article-content-seventh-section-text-01-text-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 100px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.article-content-seventh-section-text-01-main-container {
+    background-color: rgba(16, 05, 05, 0.8);
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.article-content-seventh-section-text-01-text {
+    width: 50%;
+    /* background-color: rgba(16, 05, 05, 0.8); */
+    pointer-events: auto;
+    padding-right: 200px;
+    /* margin: 15px; */
+
+}
+
+.seventh-section-sync-images-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    position: absolute;
+    /* margin-right: -20px; */
+    pointer-events: auto;
+}
+
+.article-content-eighth-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    /* margin: 20px; */
+    padding-bottom: 200px;
+
+}
+
+.article-content-eighth-section-text .paragraph-start-indent {
+    width: 100%;
+    padding-left: 200px;
+    padding-right: 40px;
+    font-size: 48px;
+    font-weight: 300;
+}
+
+.body-term {
+    font-weight: 600;
+}
+
+.narrative-term {
+    font-weight: 600;
+}
+
+/* .genre {
+    text-decoration: underline;
+} */
+
+.bibliography {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.bibliography-title {
+    font-family: 'GretaTextH+L';
+    font-size: 38px;
+    font-weight: 600;
+    margin-bottom: 100px;
+    margin-top: 100px;
+    padding-bottom: 150px;
+    text-align: right;
+    border-right: 1px solid var(--accent-color);
+    border-left: 1px solid var(--accent-color);
+    /* padding: 10px; */
+    /* background-color: rgba(16, 05, 05, 0.8); */
+    color: var(--accent-color);
+}
+
+.bibliography-text {
+    font-weight: 300;
+    position: relative;
+    display: block;
+    /* position: fixed; */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background-color: rgba(16, 05, 05, 0.8); */
+    color: var(--accent-color);
+}
+
+/* Bookshelf container */
+.bibliography-list {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    list-style: none;
+    margin: 0;
+    /* padding: 10px 10px 10px 10px; */
+    min-height: 400px;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+/* Hide scrollbar for webkit browsers */
+.bibliography-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Book spine default state - uniform size matching navbar button width */
+.bibliography-list .book-item {
+    width: var(--book-width, 65px);
+    /* Dynamic width matching navbar button */
+    height: var(--book-height, 400px);
+    /* Dynamic height proportional to navbar panel */
+    /* margin: 0 2px; */
+    position: relative;
+    cursor: grab;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: bottom center;
+    border: 1px solid var(--accent-color);
+    background-color: var(--background-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* DVD cases - same size as books */
+.bibliography-list .dvd-item {
+    background-color: rgba(68, 68, 68, 0.1);
+}
+
+/* Book spine text */
+.book-spine {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(0deg);
+    font-size: calc(var(--book-width, 65px) * 0.3);
+    /* Scale font size with book width */
+    font-weight: 600;
+    color: var(--accent-color);
+    text-align: end;
+    padding: 30px 5px;
+    line-height: 1.2;
+    letter-spacing: 1px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    transition: opacity 0.3s ease;
+}
+
+
+/* Hebrew spine text */
+.hebrew-source .book-spine {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    direction: rtl;
+    justify-content: flex-start;
+    /* Counteract the rotation effect to align at top */
+}
+
+/* DVD spine styling */
+.dvd-item .book-spine {
+    font-family: 'TheBasics';
+    font-size: calc(var(--book-width, 65px) * 0.3);
+    color: var(--background-color);
+    background: var(--accent-color);
+    border: 1px solid var(--background-color);
+    /* background: linear-gradient(135deg, rgba(68, 68, 68, 0.1), rgba(68, 68, 68, 0.3)); */
+}
+
+/* Full text (hidden by default) */
+.book-full {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color);
+    color: var(--accent-color);
+    padding: 35px;
+    font-size: 24px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 5;
+    border: 0.5px solid var(--accent-color);
+    /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: end;
+}
+
+/* Hover state - "pulling out" the book */
+.bibliography-list .book-item:hover {
+    /* transform: translateY(-20px) scale(1.1); */
+    z-index: 20;
+    width: calc(var(--book-width, 65px) * 3);
+    height: calc(var(--book-height, 400px) * 1);
+    /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); */
+    cursor: auto;
+}
+
+.bibliography-list .book-item:hover .book-spine {
+    opacity: 0;
+}
+
+.bibliography-list .book-item:hover .book-full {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Disable hover effects while dragging */
+.bibliography-list.dragging .book-item:hover {
+    transform: none;
+    z-index: auto;
+    width: var(--book-width, 65px);
+    /* Reset to original size when dragging */
+    height: var(--book-height, 400px);
+    box-shadow: none;
+    cursor: grabbing;
+}
+
+.bibliography-list.dragging .book-item:hover .book-spine {
+    opacity: 1;
+}
+
+.bibliography-list.dragging .book-item:hover .book-full {
+    opacity: 0;
+    transform: scale(0);
+}
+
+/* Prevent text selection while dragging */
+.bibliography-list.dragging {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Bookshelf fake cursors */
+.bibliography-list .fake-cursor {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.bibliography-list .fake-cursor.visible {
+    opacity: 0.4;
+}
+
+/* Hide cursors when book is expanded */
+.bibliography-list .book-item:hover .fake-cursor {
+    opacity: 0 !important;
+}
+
+/* Slightly different cursor opacity for DVDs */
+.bibliography-list .dvd-item .fake-cursor.visible {
+    opacity: 0.3;
+}
+
+/* Cursor animation on appearance */
+.bibliography-list .fake-cursor.visible {
+    animation: cursorAppear 0.4s ease;
+}
+
+@keyframes cursorAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    to {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+}
+
+/* Subtle glow effect for cursors */
+.bibliography-list .fake-cursor svg {
+    filter: drop-shadow(0 0 2px rgba(68, 68, 68, 0.3));
+}
+
+/* Hebrew source styling */
+.bibliography-list .hebrew-source.book-item:hover .book-full {
+    direction: rtl;
+    text-align: right;
+}
+
+.bibliography-list .english-source.book-item:hover .book-full {
+    direction: ltr;
+    text-align: left;
+    /* font-size: 1.4rem; */
+}
+
+
+/* Author/Creator name styling */
+.author-name {
+    font-family: 'NarkissYair';
+    font-weight: 400;
+}
+
+/* DVD hover effect */
+.bibliography-list .dvd-item:hover {
+    width: calc(var(--book-width, 65px) * 3);
+    /* Expand to 5x width on hover */
+    height: calc(var(--book-height, 400px) * 1);
+    /* Proportional height increase */
+
+    /* background: linear-gradient(135deg, var(--background-color), rgba(68, 68, 68, 0.1)); */
+    font-family: 'TheBasics';
+    font-weight: 300;
+    /* color: var(--background-color);
+    background: linear-gradient(135deg, rgba(68, 68, 68, 0.1), rgba(68, 68, 68, 0.3)); */
+}
+
+.bibliography-list .dvd-item:hover .book-full {
+    font-weight: normal;
+    /* background: linear-gradient(135deg, var(--background-color), rgba(68, 68, 68, 0.05)); */
+    color: var(--background-color);
+    /* background: linear-gradient(135deg, rgba(68, 68, 68, 0.4), rgba(68, 68, 68, 0.8)); */
+    background: var(--accent-color);
+    border: 1px solid var(--background-color);
+}
+
+/* Disable DVD hover effects while dragging */
+.bibliography-list.dragging .dvd-item:hover {
+    width: var(--book-width, 65px);
+    /* Reset to original size when dragging */
+    height: var(--book-height, 400px);
+    font-family: 'TheBasics Display Thin', sans-serif;
+    font-weight: 600;
+    cursor: grabbing;
+}
+
+.bibliography-list.dragging .dvd-item:hover .book-full {
+    font-weight: 600;
+    color: var(--accent-color);
+    background: rgba(68, 68, 68, 0.1);
+}
+
+/* Responsive adjustments - books now auto-scale with navbar dimensions */
+@media (max-width: 1200px) {
+    .book-spine {
+        font-size: calc(var(--book-width, 65px) * 0.15);
+        /* Scale font with book width */
+        padding: 8px 4px;
+    }
+
+    .bibliography-list .book-item:hover {
+        width: calc(var(--book-width, 65px) * 4.5);
+        /* Expand to 4.5x width on hover */
+        height: calc(var(--book-height, 400px) * 1.2);
+        /* Slightly taller on hover */
+    }
+}
+
+@media (max-width: 768px) {
+    .bibliography-list {
+        padding: 15px 15px 15px 15px;
+        min-height: 300px;
+    }
+
+    .bibliography-list .book-item {
+        margin: 0 1px;
+        width: 100%;
+        height: 150px;
+        padding: 12px;
+    }
+
+    .book-spine {
+        font-size: calc(var(--book-width, 65px) * 0.12);
+        /* Smaller font on mobile */
+        padding: 6px 3px;
+    }
+
+    .bibliography-list .book-item:hover {
+        width: calc(var(--book-width, 65px) * 4);
+        /* Smaller expansion on mobile */
+        height: calc(var(--book-height, 400px) * 1.1);
+        width: 100%;
+        height: 150px;
+        padding: 12px;
+    }
+
+    .book-full {
+        font-size: 12px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bibliography-list {
+        padding: 10px 10px 10px 10px;
+    }
+
+    .book-spine {
+        font-size: calc(var(--book-width, 65px) * 0.1);
+        /* Even smaller font */
+        padding: 5px 2px;
+    }
+
+    .bibliography-list .book-item:hover {
+        width: calc(var(--book-width, 65px) * 3.5);
+        /* Conservative expansion */
+        height: calc(var(--book-height, 400px) * 1.05);
+        width: 100%;
+        height: 150px;
+        padding: 12px;
+    }
+
+    .book-full {
+        font-size: 11px;
+        padding: 10px;
+    }
+}
+
+.four-images {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.four-images .sync-images-grid {
+    margin-left: auto;
+    /* margin-right: 100px; */
+}
+
+/* ul {
+    padding: 10px;
+    margin-left: 100px;
+    font-size: 18px;
+
+} */
+
+/* //////H1 ANIMATION/////// */
+
+
+#fakeCursor {
+    position: absolute;
+    width: 130px;
+    /* Adjust size as needed */
+    height: 130px;
+    /* Adjust size as needed */
+    background-image: url('svg/fakeCursor.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+#fakeCursor.active {
+    opacity: 1;
+}
+
+/* TEST */
+.notes {
+    font-size: 18px;
+    font-family: 'NarkissYair';
+    font-weight: 100;
+    position: relative;
+}
+
+
+/* Proportional Text Selection Styles */
+.proportional-text-container {
+    position: relative;
+    display: inline;
+    /* For inline text spans */
+}
+
+.proportional-text-container.notes {
+    width: 20%;
+    display: block;
+    /* For block-level notes */
+    margin-right: 50px;
+}
+
+.proportional-text-container.notes.width30 {
+    width: 30%;
+}
+
+.proportional-text-container.notes.notes-fifth-section {
+    width: 55%;
+    margin-right: 100px;
+}
+
+
+.proportional-text-container.notes.notes-seventh-section {
+    width: 35%;
+    /* background-color: rgba(16, 05, 05, 0.8); */
+    background-color: rgba(221, 221, 209, 0.8);
+    /* color: var(--accent-color); */
+    color: rgba(16, 05, 05, 1);
+    padding: 15px;
+    line-height: 1.2;
+    margin-top: 200px;
+    /* pointer-events: none; */
+}
+
+.proportional-text-content {
+    display: inline;
+}
+
+.proportional-fake-selected {
+    /* background-color: #ff9800; */
+    background-color: rgba(152, 152, 255, 0.8);
+    color: white;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+/* Generic fake cursor styles */
+.fake-cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.05s ease-out;
+}
+
+.fake-cursor.visible {
+    opacity: 1;
+}
+
+.fake-cursor svg {
+    filter: drop-shadow(0 0 3px rgba(152, 152, 255, 0.8));
+}
+
+/* Backward compatibility - keep proportional cursor styles */
+.proportional-fake-cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.05s ease-out;
+}
+
+.proportional-fake-cursor.visible {
+    opacity: 1;
+}
+
+.proportional-fake-cursor svg {
+    filter: drop-shadow(0 0 3px rgba(152, 152, 255, 0.8));
+}
+
+/* Keep your existing selection styles */
+.flex-section-second-text-paragraphs-to-note::selection {
+    /* background-color: #4CAF50; */
+    background-color: rgba(152, 152, 255, 0.8);
+    color: white;
+}
+
+/* ------- RTL LAYOUT FIXES ------- */
+
+/* Prevent horizontal overflow and content shifting */
+html {
+    max-width: 100vw;
+}
+
+body {
+    max-width: 100vw;
+    box-sizing: border-box;
+    /* Keep overflow-x: hidden from existing body styles, don't add overflow-y constraints */
+}
+
+/* Ensure all elements respect container boundaries - X-axis only */
+* {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* Don't constrain height/vertical positioning for sticky elements */
+}
+
+/* RTL-specific container constraints */
+.container {
+    max-width: 100vw;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Prevent flex items from causing overflow */
+.article-content,
+.article-content>* {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Ensure text containers don't exceed boundaries */
+.article-content-second-section-text-01,
+.article-content-first-section-main,
+.article-content-sixth-section-text-01 {
+    max-width: 100%;
+    /* overflow-x: hidden; */
+}
+
+/* Default styles for any new divs added */
+div {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Prevent text overflow in RTL */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+div {
+    max-width: 100%;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+/* ------- END RTL LAYOUT FIXES ------- */
+
+/* ===============================================
+   MOBILE & TABLET RESPONSIVE STYLES
+   (Desktop styles above remain unchanged)
+   =============================================== */
+@media (max-width: 1300px) and (min-width: 950px) {
+    .article-content-seventh-section-text-01-text {
+        padding-right: 5vw;
+    }
+
+    .article-content-fifth-section-text {
+        margin-right: -30vw;
+        margin-left: -30vw;
+        background-color: rgba(221, 221, 209, 0.8);
+        z-index: 10;
+    }
+}
+
+@media (max-width: 950px) and (min-width: 768px) {
+    .article-content-seventh-section-text-01-text {
+        padding-right: 3vw;
+    }
+
+    .article-content-fifth-section-text {
+        margin-right: -30vw;
+        margin-left: -30vw;
+        background-color: rgba(221, 221, 209, 0.8);
+        z-index: 10;
+    }
+}
+
+
+/* Mobile & Tablet: Base Typography */
+@media (max-width: 768px) {
+
+    /* Improve Hebrew text readability on mobile */
+    body {
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* Article Header - Mobile */
+    .article-header h1 {
+        font-size: clamp(1.8rem, 6vw, 3rem);
+        line-height: 1.2;
+        padding: 0 20px;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .article-header-text {
+        padding: 0 20px;
+        font-size: 1.2rem;
+        line-height: 1.5;
+    }
+
+    .article-header-author {
+        font-size: 1.1rem;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Mobile & Tablet: Layout Structure */
+@media (max-width: 768px) {
+    .container {
+        padding: 0;
+        width: 100%;
+        max-width: 100vw;
+    }
+
+    .article-content {
+        /* padding: 10px; */
+        margin: 0;
+    }
+
+    /* Stack all article sections vertically */
+    .article-content-first-section,
+    .article-content-second-section,
+    .article-content-third-section,
+    .article-content-forth-section,
+    .article-content-fifth-section,
+    .article-content-sixth-section,
+    .article-content-seventh-section,
+    .article-content-eighth-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        padding: 0;
+    }
+
+    /* Main content areas */
+    .article-content-first-section-main,
+    .article-content-fifth-section-main,
+    .article-content-seventh-section-main {
+        display: block;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content-sixth-section-main {
+        display: flex;
+    }
+
+    /* Text sections */
+    .article-content-first-section-text,
+    .article-content-second-section-text,
+    .article-content-fifth-section-text,
+    .article-content-sixth-section-text,
+    .article-content-seventh-section-text {
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+
+    /* Nested text containers */
+    .article-content-second-section-text-01,
+    .article-content-sixth-section-text-01,
+    .article-content-seventh-section-text-01 {
+        margin-bottom: 1rem;
+        flex-direction: column;
+    }
+
+    .article-content-second-section-text-01-text,
+    .article-content-sixth-section-text-01-text,
+    .article-content-seventh-section-text-01-text,
+    .article-content-seventh-section-text-01-main-container {
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+}
+
+/* Mobile & Tablet: Typography & Spacing */
+@media (max-width: 768px) {
+    .article-header h1 {
+        font-size: clamp(2.2rem, 8vw, 7.5rem);
+        padding: 80px 30px;
+        line-height: 1;
+    }
+
+    .article-header-text .paragraph-start-indent {
+        width: 100%;
+        line-height: 1.2;
+    }
+
+    h2 {
+        position: sticky;
+        top: 0;
+        font-size: clamp(1.5rem, 5vw, 2.2rem);
+        line-height: 1.3;
+        margin: 1.5rem 0 1rem 0;
+        padding: 0 10px;
+        padding-right: 10px;
+        background-color: var(--background-color);
+        z-index: 100;
+        align-self: flex-end;
+        border-right: 1px solid var(--accent-color);
+        width: 80%;
+    }
+
+    p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .paragraph-start-indent {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        text-indent: 0;
+        /* Remove indent on mobile for better readability */
+    }
+
+    .paragraph-start-indent-two-coloumns {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        text-indent: 0;
+    }
+
+    .article-content-eighth-section-text .paragraph-start-indent {
+        width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    .article-content-eighth-section-text .paragraph-start-indent .movie-name {
+        font-size: 28px;
+    }
+
+    .article-content-seventh-section-text-01-text {
+        padding-right: 0px;
+        width: 100%;
+    }
+
+    /* Movie names and credits */
+    .movie-name {
+        font-size: 1.2rem;
+        line-height: inherit;
+    }
+
+    .movie-credits {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        display: inline;
+    }
+}
+
+/* Mobile & Tablet: Images and Sync Images */
+@media (max-width: 768px) {
+
+    /* Sync images containers */
+    .first-section-sync-images-container,
+    .fifth-section-sync-images-container,
+    .sixth-section-sync-images-container,
+    .seventh-section-sync-images-container {
+        margin: 1.5rem 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .seventh-section-sync-images-container {
+        position: relative;
+    }
+
+    /* Make sync images responsive */
+    .sync-images-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 auto;
+    }
+
+    /* Individual image in sixth section */
+    .sixth-section-sync-images-container-image {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        margin: 1rem 0;
+    }
+
+    /* Image details */
+    .image-details,
+    .image-details-fifth-section {
+        font-size: 0.9rem;
+        padding: 0 10px;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Mobile & Tablet: Notes and Proportional Text */
+@media (max-width: 768px) {
+    /* .proportional-text-container {
+        display: block;
+        margin: 1rem 0;
+        padding: 15px;
+        background: rgba(240, 240, 240, 0.3);
+        border-right: 3px solid #ccc;
+        border-radius: 4px;
+    } */
+
+    .proportional-text-container.notes {
+        /* font-size: 0.9rem;
+        line-height: 1.4;
+        margin: 1rem 0;
+        padding: 12px;
+        background: rgba(230, 230, 230, 0.4);
+        border-right: 3px solid #999; */
+        width: 50%;
+        align-self: flex-end;
+    }
+
+    /* .proportional-text-container.notes.note-width-big,
+    .proportional-text-container.notes.notes-fifth-section,
+    .proportional-text-container.notes.notes-seventh-section {
+        margin: 1rem 0;
+        padding: 12px;
+    } */
+
+    .proportional-text-container.notes.notes-seventh-section {
+        width: 70%;
+        margin-top: 0px;
+    }
+
+    .proportional-text-content {
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    .proportional-text-container.notes {
+        width: 60%;
+    }
+
+}
+
+/* Mobile & Tablet: Interactive Elements */
+@media (max-width: 768px) {
+
+    /* Hide custom cursors on touch devices */
+    .fake-cursor,
+    .proportional-fake-cursor,
+    .three-column-cursor,
+    .sync-cursor {
+        display: none !important;
+    }
+
+    /* Disable cursor overlays */
+    .cursor-overlay,
+    .side-column-cursor-overlay {
+        display: none !important;
+    }
+
+    /* Echo cursor container */
+    .echo-cursor-container {
+        /* Keep the container but disable the cursor effects */
+        position: relative;
+    }
+}
+
+/* Mobile & Tablet: Lists and Structured Content */
+@media (max-width: 768px) {
+    .bordered-list-container {
+        margin: 1.5rem 0;
+        padding: 0;
+    }
+
+    .bordered-list-container-full {
+        margin: 1.5rem 0;
+    }
+
+    .bordered-list {
+        font-size: 1.2rem;
+        /* line-height: 1.5; */
+        padding: 15px;
+        margin: 0;
+        /* border: 1px solid #ddd; */
+        /* border-radius: 4px; */
+        background: var(--accent-color);
+    }
+
+    .bordered-list-follow {
+        font-size: 1.2rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    /* Specific width control for paragraph with bordered-list-follow on mobile */
+    .paragraph-start-indent.bordered-list-follow {
+        width: 60%;
+        /* Change this to your desired width */
+    }
+}
+
+/* Mobile & Tablet: Bibliography */
+@media (max-width: 768px) {
+    .bibliography {
+        padding: 20px;
+        margin-top: 2rem;
+    }
+
+    .bibliography h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .bibliography-title {
+        margin-bottom: 0rem;
+        padding: 0px;
+        border: none;
+    }
+
+    .bibliography-text {
+        width: 100%;
+        padding: 0;
+    }
+
+    .bibliography-list {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        /* max-height: 60vh; */
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .bibliography-list .book-item,
+    .bibliography-list .dvd-item {
+        /* margin-bottom: 0.5rem; */
+        padding: 8px;
+        /* border-radius: 4px; */
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(200, 200, 200, 1);
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        position: relative;
+        flex-direction: column;
+        border: 1px solid var(--accent-color);
+    }
+
+    .book-spine {
+        font-size: 0.9rem;
+        line-height: 1.3;
+        /* display: block; */
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        transition: opacity 0.3s ease;
+        opacity: 1;
+        writing-mode: inherit;
+        width: 100%;
+    }
+
+    .hebrew-source .book-spine {
+        writing-mode: inherit;
+        transform: rotate(0deg);
+        direction: initial;
+        justify-content: flex-start;
+    }
+
+    .book-full {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        display: block;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        position: static;
+        transform: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    }
+
+    .dvd-item .book-spine {
+        font-size: 1.85rem;
+        border: 1px solid var(--accent-color);
+    }
+
+
+    /* Expanded state for mobile books */
+    .bibliography-list .book-item.expanded,
+    .bibliography-list .dvd-item.expanded {
+        /* background: rgba(255, 255, 255, 0.2); */
+        border: 1px solid var(--accent-color);
+        padding: 15px;
+        /* margin-bottom: 1rem; */
+        /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+        height: 40vh;
+    }
+
+    .bibliography-list .dvd-item.expanded {
+        background-color: var(--accent-color);
+    }
+
+    .bibliography-list .dvd-item {
+        background-color: var(--accent-color);
+        border: 1px solid var(--background-color);
+    }
+
+    .bibliography-list .book-item.dvd-item:hover .book-full {
+        border: 1px solid var(--accent-color);
+    }
+
+    .bibliography-list .book-item.expanded .book-spine,
+    .bibliography-list .dvd-item.expanded .book-spine {
+        /* opacity: 0; */
+        height: 10vh;
+        margin-bottom: 0;
+    }
+
+    .bibliography-list .book-item.expanded .book-full,
+    .bibliography-list .dvd-item.expanded .book-full {
+        opacity: 1;
+        max-height: 500px;
+        padding: 10px 0;
+        /* margin-top: 0.5rem; */
+    }
+
+    /* Hide hover effects on touch devices */
+    .bibliography-list .book-item:hover,
+    .bibliography-list .dvd-item:hover {
+        transform: none;
+        box-shadow: none;
+        border: 1px solid var(--accent-color);
+        color: var(--accent-color);
+    }
+
+    .bibliography-list .book-item:hover .book-spine,
+    .bibliography-list .dvd-item:hover .book-spine {
+        opacity: 1;
+        font-size: 1.85rem;
+    }
+
+    .bibliography-list .book-item:hover .book-full,
+    .bibliography-list .dvd-item:hover .book-full {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Tablet Specific Enhancements (768px - 1200px) */
+@media (min-width: 768px) and (max-width: 1200px) {
+
+    /* Better use of horizontal space on tablets */
+    /* .container {
+        padding: 0 40px;
+    } */
+
+    /* .article-content {
+        padding: 30px;
+    } */
+
+    .article-header h1 {
+        font-size: clamp(2.2rem, 8vw, 7.5rem);
+        padding: 20px 30px;
+
+    }
+
+    .article-header-text {
+        padding: 0 30px;
+        font-size: 1.1rem;
+    }
+
+    .article-header-text .paragraph-start-indent {
+        width: 100%;
+    }
+
+    /* Two-column layout for some sections on tablets */
+    .article-content-fifth-section-main {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    .article-content-fifth-section-text {
+        flex: 1;
+    }
+
+    .fifth-section-sync-images-container {
+        flex: 1;
+        max-width: 50%;
+    }
+
+    /* Bibliography improvements for tablets */
+    .bibliography {
+        padding: 40px;
+    }
+
+    .bibliography-list {
+        max-height: 70vh;
+        padding: 20px;
+    }
+
+    .bibliography-list .book-item,
+    .bibliography-list .dvd-item {
+        padding: 12px;
+        margin-bottom: 0.8rem;
+    }
+
+    .book-spine {
+        font-size: 1rem;
+    }
+
+    .book-full {
+        font-size: 0.9rem;
+    }
+}
+
+/* Small Mobile Specific (under 480px) */
+@media (max-width: 480px) {
+
+
+    /* Full-screen article header layout */
+    .article-header {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+    }
+
+    .article-header h1 {
+        height: 50vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 15vw;
+        line-height: 0.8;
+        padding: 20px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .article-header h1.twin-peaks-title {
+        font-size: 20vw;
+    }
+
+    .article-header-text.psyco-title .paragraph-start-indent {
+        font-size: 1.2rem;
+        width: 100%;
+    }
+
+    .article-header-text {
+        height: 50vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin: 0;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+
+    .article-header-text .paragraph-start-indent {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+
+    .article-header-text.twin-peaks-title .paragraph-start-indent {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .article-content-first-section-main {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+
+    }
+
+    /* .article-content {
+        padding: 15px;
+    } */
+
+
+    .paragraph-start-indent {
+        font-size: 1.2rem;
+        line-height: 1.5;
+    }
+
+    .article-content-fifth-section .paragraph-start-indent {
+        font-size: 1.2rem;
+    }
+
+    .article-content-third-section .paragraph-start-indent {
+        width: 100%;
+    }
+
+    .paragraph-start-indent.bordered-list-follow {
+        width: 55%;
+        /* Change this to your desired width */
+    }
+
+    .article-content-fifth-section-text {
+        column-count: 1;
+        padding: 20px;
+    }
+
+
+    h2 {
+        position: sticky;
+        top: 0;
+        font-size: clamp(1.3rem, 6vw, 2rem);
+        padding: 0 5px;
+        padding-right: 10px;
+        background-color: var(--background-color);
+        z-index: 100;
+        line-height: 1;
+        padding-top: 10px;
+        align-self: flex-end;
+        border-right: 1px solid var(--accent-color);
+        width: 50%;
+    }
+
+    .proportional-text-container.notes {
+        font-size: 0.95rem;
+        padding: 10px;
+    }
+
+    .article-content-second-section-text-01-notes {
+        gap: 0px;
+        width: 100%;
+        margin-top: 0px;
+    }
+
+    .proportional-text-container.notes {
+        align-self: flex-start;
+    }
+
+    .proportional-text-container.notes.width30 {
+        width: 60%;
+    }
+
+    .bibliography {
+        padding: 15px;
+    }
+
+    .bibliography-list {
+        display: flex;
+        flex-direction: column;
+        /* max-height: 50vh; */
+        padding: 8px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .book-spine {
+        font-size: 1.85rem;
+    }
+
+
+    .book-full {
+        font-size: 1.3rem;
+    }
+}
+
+/* Touch-friendly improvements */
+/* @media (hover: none) and (pointer: coarse) { */
+
+    /* Better touch targets */
+    /* .bibliography-list .book-item,
+    .bibliography-list .dvd-item {
+        width: 100%;
+        height: 150px;
+        padding: 12px;
+    } */
+/* 
+    .bibliography-list .book-item:hover,
+    .bibliography-list .dvd-item:hover {
+        transform: none !important;
+        box-shadow: none !important;
+    } */
+
+    /* Make sure all fake cursors are hidden */
+    /* .fake-cursor,
+    .proportional-fake-cursor,
+    .three-column-cursor,
+    .sync-cursor,
+    #fakeCursor {
+        display: none !important;
+        opacity: 0 !important;
+    } */
+
+    /* Disable ALL sync-images interactions on touch devices */
+    /* .sync-images-container,
+    .sync-images-grid,
+    .sync-image-container,
+    .sync-image {
+        pointer-events: none !important;
+        touch-action: pan-y pan-x !important;
+        -webkit-overflow-scrolling: touch;
+    } */
+
+    /* Ensure page can scroll normally */
+    /* body,
+    html {
+        touch-action: pan-y pan-x !important;
+        -webkit-overflow-scrolling: touch;
+    }
+} */
+
+/* ===============================================
+   RESPONSIVE SYNC-IMAGES STYLES
+   =============================================== */
+
+/* Mobile sync-images optimizations */
+@media (max-width: 768px) {
+    .sync-images-container {
+        width: 100% !important;
+        max-width: 100vw !important;
+        margin: 0 auto;
+    }
+
+    .sync-images-grid {
+        gap: 5px !important;
+        padding: 10px;
+    }
+
+    .sync-image-container {
+        /* border-radius: 8px; */
+        overflow: hidden;
+    }
+
+    .sync-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Hide sync cursors on mobile */
+    .sync-cursor {
+        display: none !important;
+    }
+
+    /* Disable sync-images touch interactions to allow page scrolling */
+    .sync-image-container,
+    .sync-image {
+        pointer-events: none !important;
+        touch-action: pan-y !important;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Re-enable touch for the container but allow scrolling */
+    .sync-images-container {
+        touch-action: pan-y !important;
+    }
+
+    /* Better touch area for sync images */
+    .sync-image-container {
+        min-height: var(--sync-image-min-height, 120px);
+    }
+}
+
+/* Small mobile specific */
+@media (max-width: 480px) {
+    .sync-images-container {
+        margin: 20px 0;
+    }
+
+    .sync-images-grid {
+        gap: 3px !important;
+        padding: 5px;
+    }
+
+    .sync-image-container {
+        min-height: 100px;
+    }
+}
+
+/* Tablet sync-images optimizations */
+@media (min-width: 768px) and (max-width: 1200px) {
+    .sync-images-container {
+        /* max-width: 90vw !important; */
+        margin: 0 auto;
+    }
+
+    /* .sync-images-grid {
+        gap: 8px !important;
+        padding: 15px;
+    } */
+
+    .sync-image-container {
+        min-height: var(--sync-image-min-height, 150px);
+    }
+}

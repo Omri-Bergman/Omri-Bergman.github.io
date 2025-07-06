@@ -1,0 +1,204 @@
+/* Three-column layout with independent scrolling */
+.three-column-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative; /* Required for absolute positioning of cursor overlays */
+}
+
+.side-column {
+    /* background: #fff; */
+    padding: 20px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    position: relative; /* Required for fake cursor positioning */
+}
+
+.middle-column {
+    /* background: #fff; */
+    padding: 20px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+/* Alternating content sections */
+/* .content-section {
+    margin-bottom: 20px;
+} */
+
+
+
+.content-section.spacer {
+    /* Empty space to maintain alternating rhythm */
+    min-height: 90vh;
+    /* Optional: add a subtle visual indicator */
+    /* border-left: 2px solid #f0f0f0; */
+}
+
+.content-section:last-child {
+    margin-bottom: 100px;
+}
+
+.image-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.image-pair img {
+    width: 100%;
+    height: auto;
+    /* border-radius: 4px; */
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.image-pair-number {
+    display: none;
+    /* grid-column: 1 / -1;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    font-family: 'TheBasics-Regular', sans-serif; */
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .three-column-container {
+        grid-template-columns: 1fr 1.5fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .three-column-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        height: auto;
+    }
+    
+    .side-column,
+    .middle-column {
+        height: 50vh;
+    }
+    
+    /* On mobile, hide spacer sections to save space */
+    .content-section.spacer {
+        display: none;
+    }
+}
+
+/* Hide scrollbars */
+.side-column,
+.middle-column {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.side-column::-webkit-scrollbar,
+.middle-column::-webkit-scrollbar {
+    display: none; /* WebKit browsers (Chrome, Safari, Edge) */
+}
+
+/* Text styling consistent with other articles */
+.side-column h2 {
+    /* font-family: 'NarkissYair', serif; */
+    font-size: 24px;
+    margin-bottom: 20px;
+    position: relative;
+    width: 100%;
+    /* color: #333; */
+}
+
+.side-column p {
+    /* font-family: 'NarkissYair', serif; */
+    font-size: 18px;
+    /* line-height: 1.6; */
+    margin-bottom: 15px;
+    /* text-align: justify; */
+}
+
+.side-column .last-item {
+    margin-bottom: 100px;
+}
+
+/* Image wrapper for cursor positioning */
+.image-cursor-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Fake cursor styling */
+.three-column-cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-1px, -1px);
+    opacity: 0.8;
+    transition: opacity 0.1s ease-out;
+}
+
+.three-column-cursor svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Text column cursor overlay containers */
+.side-column-cursor-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* Text column fake cursors */
+.fake-cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+.fake-cursor.visible {
+    opacity: 0.7;
+}
+
+.fake-cursor svg {
+    width: 26px;
+    height: 26px;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+}
+
+/* Integration with sync-images system */
+.sync-images-test {
+    margin-bottom: 20px;
+}
+
+.sync-images-test .image-pair-number {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    font-family: 'TheBasics-Regular', sans-serif;
+}
+
+/* Custom min-height override for sync-images */
+[data-min-height] .sync-image-container {
+    min-height: var(--custom-min-height) !important;
+}
+
+/* .paragraph-start-indent {
+    text-indent: 1.5em;
+}  */

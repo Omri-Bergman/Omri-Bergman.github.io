@@ -1,0 +1,418 @@
+@font-face {
+    font-family: 'NarkissYair';
+    src: url('fonts/NarkissYair-Regular-TRIAL.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'NarkissYair', serif;
+    background: #000;
+    overflow-x: hidden; /* Prevent horizontal scroll only */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
+
+/* === STATIC GRID LAYOUT === */
+#gridContainer {
+    display: grid;
+    width: 100vw;
+    /* Height will be set by JavaScript based on actual rows */
+    gap: 0;
+    background-color: #444;
+    /* PERFORMANCE: Hardware acceleration */
+    transform: translateZ(0);
+    will-change: transform;
+    contain: layout style paint;
+}
+
+.panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    /* PERFORMANCE: Hardware acceleration */
+    transform: translateZ(0);
+    will-change: transform;
+    contain: layout style paint;
+}
+
+/* Disable individual panel hover - use group scaling instead */
+.panel:hover:not(.image):not(.text) {
+    transform: scale(1.02);
+    z-index: 1;
+}
+
+/* Group hover effect for text panels - applied via JavaScript */
+.panel.text.group-hover {
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+/* === TEXT PANELS === */
+.panel.text {
+    background: #444;
+    color: #ddddd1;
+    padding: 15px;
+    text-align: center;
+    flex-direction: column;
+    gap: 5px;
+    cursor: default; /* Keep default cursor instead of pointer */
+}
+
+.panel.text.alternate {
+    background: #ddddd1;
+    color: #444;
+}
+
+.panel.text h3 {
+    margin: 0;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    font-weight: 600;
+    font-family: 'NarkissYair', serif;
+}
+
+.panel.text p {
+    margin: 0;
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
+    line-height: 1.3;
+    text-align: center;
+    font-family: 'NarkissYair', serif;
+}
+
+/* === IMAGE PANELS === */
+.panel.image {
+    background: #222;
+    position: relative;
+    overflow: hidden;
+    cursor: default; /* Keep default cursor instead of pointer */
+}
+
+.panel.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0 !important;
+    transition: opacity 1s ease-in-out;
+}
+
+.panel.image img.fade-in {
+    opacity: 1 !important;
+}
+
+/* Smooth fade-in effect for images */
+
+/* Group hover effect - applied via JavaScript */
+.panel.image.group-hover img {
+    transform: scale(1.05);
+}
+
+/* === PLACEHOLDER PANELS === */
+.panel.placeholder {
+    background: #1a1a1a;
+    color: #666;
+    font-size: 0.8em;
+    text-align: center;
+}
+
+/* === CLICK EFFECT === */
+.panel.clicked {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* === SYNCHRONIZED CURSORS === */
+.sync-cursor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+    transform: translate(-14px, -14px); /* Center the 28x28 cursor */
+    transition: none; /* No transition for smooth real-time movement */
+}
+
+.sync-cursor svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* === TEXT PANELS === */
+.image-text-panel {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    line-height: 1.3;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.text-panel-title {
+    font-weight: bold;
+    margin-bottom: 2px;
+    font-size: 0.9em;
+}
+
+.text-panel-metadata {
+    font-size: 0.8em;
+    opacity: 0.9;
+    font-style: italic;
+}
+
+/* === GROUP MODAL OVERLAY === */
+.group-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.group-modal-overlay.active {
+    opacity: 1;
+}
+
+/* === MODAL CONTENT === */
+.group-modal-content {
+    background: rgba(30,30,30,0.6);
+    border-radius: 0px;
+    padding: 0px 30px 30px 30px;
+    /* max-width: 95vw; */
+    max-height: 95vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.group-modal-overlay.active .group-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+
+
+/* === MODAL TITLE === */
+.group-modal-title {
+    /* margin: 0 0 25px 0; */
+    color: #444;
+    /* font-size: clamp(1.5rem, 4vw, 2.5rem); */
+    font-weight: 600;
+    /* font-family: 'TheBasics'; */
+    /* font-size: 44px; */
+    /* font-weight: 600; */
+    /* text-align: center; */
+    margin-left: -30px;
+    
+    border-right: 0px solid var(--accent-color);
+}
+
+/* === MODAL IMAGES GRID === */
+.group-modal-images {
+    display: grid;
+    gap: 0px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: start;
+    padding: 30px;
+}
+
+/* Responsive breakpoints for image grid */
+@media (max-width: 768px) {
+    .group-modal-images {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .group-modal-images {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1201px) {
+    .group-modal-images {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1600px) {
+    .group-modal-images {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* === MODAL IMAGE CONTAINERS === */
+.group-modal-image-container {
+    position: relative;
+    border-radius: 0px;
+    overflow: hidden;
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); */
+    transition: transform 0.3s ease;
+}
+
+/* .group-modal-image-container:hover {
+    transform: translateY(-5px);
+} */
+
+/* === MODAL IMAGES === */
+.group-modal-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0 !important;
+    transition: opacity 1s ease-in-out;
+}
+
+.group-modal-image.fade-in {
+    opacity: 1 !important;
+}
+
+/* Smooth fade-in effect for modal images */
+
+.group-modal-image-container:hover .group-modal-image {
+    transform: scale(1.05);
+}
+
+/* === MODAL RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 768px) {
+    .group-modal-content {
+        padding: 20px;
+        margin: 10px;
+        border-radius: 8px;
+    }
+    
+    .group-modal-title {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+}
+
+/* === MODAL SCROLLBAR STYLING === */
+.group-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.group-modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.group-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.group-modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* === DEBUG INFO === */
+#debugInfo {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    font-size: 12px;
+    font-family: monospace;
+    border-radius: 4px;
+    z-index: 100;
+    transition: opacity 0.3s ease;
+}
+
+#debugInfo div {
+    margin: 2px 0;
+}
+
+/* === ARTICLE SECTION BELOW GRID === */
+.article-section {
+    background: #ddddd1;
+    /* padding: 60px 40px;
+    min-height: 50vh; */
+}
+
+.paragraph-start-indent-text {
+    padding-right: 20px;
+    padding-left: 30px;
+    font-family: 'GretaTextH+L', serif;
+}
+
+/* .article-header {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.twin-peaks-title {
+    font-family: 'NarkissYair', serif;
+    color: #333;
+    font-weight: 600;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    margin-bottom: 40px;
+}
+
+.article-header-text {
+    text-align: right;
+    direction: rtl;
+}
+
+.paragraph-start-indent {
+    font-family: 'NarkissYair', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    text-align: justify;
+}
+
+.article-header-author {
+    font-weight: 700;
+    color: #222;
+} */
+
+/* Mobile adjustments for article section */
+@media (max-width: 768px) {
+    /* .article-section {
+        padding: 40px 20px;
+    } */
+    
+    .twin-peaks-title {
+        margin-bottom: 30px;
+    }
+    
+    .paragraph-start-indent {
+        text-align: right;
+    }
+} 
