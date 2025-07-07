@@ -272,6 +272,7 @@ class MultiFaceDisplay {
 
         // Storage for loaded image textures
         this.loadedImageTextures = {};
+        this.loadedImages = {}; // Store HTML Image elements for canvas drawing
         this.imagesLoaded = false;
     }
 
@@ -309,23 +310,28 @@ class MultiFaceDisplay {
         // Load each unique image
         for (const imagePath of uniquePaths) {
             const promise = new Promise((resolve, reject) => {
-                loader.load(
-                    imagePath,
-                    (texture) => {
-                        texture.minFilter = THREE.LinearFilter;
-                        texture.magFilter = THREE.LinearFilter;
-                        this.loadedImageTextures[imagePath] = texture;
-                        console.log(`✅ Loaded image: ${imagePath}`);
-                        resolve(texture);
-                    },
-                    (progress) => {
-                        // Loading progress
-                    },
-                    (error) => {
-                        console.warn(`⚠️ Failed to load image: ${imagePath}`, error);
-                        reject(error);
-                    }
-                );
+                // Load as HTML Image element for canvas drawing
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    // Store the HTML Image element
+                    this.loadedImages[imagePath] = img;
+                    
+                    // Also create the THREE.js texture
+                    const texture = new THREE.Texture(img);
+                    texture.minFilter = THREE.LinearFilter;
+                    texture.magFilter = THREE.LinearFilter;
+                    texture.needsUpdate = true;
+                    this.loadedImageTextures[imagePath] = texture;
+                    
+                    console.log(`✅ Loaded image: ${imagePath}`);
+                    resolve(texture);
+                };
+                img.onerror = (error) => {
+                    console.warn(`⚠️ Failed to load image: ${imagePath}`, error);
+                    reject(error);
+                };
+                img.src = imagePath;
             });
             loadPromises.push(promise);
         }
@@ -1210,20 +1216,27 @@ class MultiFaceDisplay {
             const imageIndex = i % modeImages.length;
             const imagePath = modeImages[imageIndex];
 
-            if (this.loadedImageTextures[imagePath]) {
-                // Use the loaded image texture
-                const texture = this.loadedImageTextures[imagePath].clone();
-                texture.needsUpdate = true;
-
-                // Create a canvas for potential modifications
+            if (this.loadedImages[imagePath]) {
+                // Create a canvas for frame copying
                 const canvas = document.createElement('canvas');
                 canvas.width = 640;
                 canvas.height = 480;
+                const ctx = canvas.getContext('2d');
+
+                // Initialize canvas with the actual image
+                const img = this.loadedImages[imagePath];
+                ctx.drawImage(img, 0, 0, 640, 480);
+
+                const canvasTexture = new THREE.CanvasTexture(canvas);
+                canvasTexture.minFilter = THREE.LinearFilter;
+                canvasTexture.magFilter = THREE.LinearFilter;
 
                 this.delayTextures.push({
                     canvas: canvas,
-                    context: canvas.getContext('2d'),
-                    texture: texture
+                    context: ctx,
+                    texture: canvasTexture,
+                    imageIndex: imageIndex,
+                    imagePath: imagePath
                 });
             } else {
                 // Fallback to gradient if image not found
@@ -2754,8 +2767,36 @@ class MultiFaceDisplay {
             if (this.video && this.video.readyState >= 2) {
                 ctx.drawImage(this.video, 0, 0, 640, 480);
             } else {
-                // Keep the fallback pattern - no need to redraw since it's already there
-                // The texture already has the fallback content from setupFallbackTexture()
+                // In fallback mode, draw alternating images to maintain delay effect
+                if (this.isInFallbackMode() && this.loadedImages && Object.keys(this.loadedImages).length > 0) {
+                    const currentMode = this.getCurrentModeKey();
+                    const modeImages = this.modeImages[currentMode] || this.modeImages.pixelation;
+                    
+                    // Choose image based on current frame for alternating effect
+                    const imageIndex = Math.floor(Date.now() / 1000) % modeImages.length;
+                    const imagePath = modeImages[imageIndex];
+                    const selectedImage = this.loadedImages[imagePath];
+                    
+                    if (selectedImage) {
+                        ctx.drawImage(selectedImage, 0, 0, 640, 480);
+                    } else {
+                        // Fallback to gradient pattern
+                        const gradient = ctx.createLinearGradient(0, 0, 640, 480);
+                        gradient.addColorStop(0, '#1a1a1a');
+                        gradient.addColorStop(0.5, '#2d2d2d');
+                        gradient.addColorStop(1, '#1a1a1a');
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(0, 0, 640, 480);
+                    }
+                } else {
+                    // Ultimate fallback - draw gradient pattern
+                    const gradient = ctx.createLinearGradient(0, 0, 640, 480);
+                    gradient.addColorStop(0, '#1a1a1a');
+                    gradient.addColorStop(0.5, '#2d2d2d');
+                    gradient.addColorStop(1, '#1a1a1a');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, 640, 480);
+                }
             }
 
             this.delayTextures[0].texture.needsUpdate = true;
