@@ -496,6 +496,13 @@ class UniversalNavbar {
                         this.setCameraMode(navItem.mode, navItem.headline);
                         console.log(`🎯 Mode set to: ${navItem.mode} with headline: ${navItem.headline} AFTER camera initialization`);
                     }, 100);
+                }).catch(error => {
+                    console.log('📹 Camera failed to start, but system is running with fallback mode');
+                    // Still set the mode even if camera failed
+                    setTimeout(() => {
+                        this.setCameraMode(navItem.mode, navItem.headline);
+                        console.log(`🎯 Mode set to: ${navItem.mode} with headline: ${navItem.headline} in fallback mode`);
+                    }, 100);
                 });
             } else {
                 this.setCameraMode(navItem.mode, navItem.headline);
@@ -584,9 +591,11 @@ class UniversalNavbar {
                                 this.setCameraModeWithRetry(mode, navItem.headline, 3);
                             }, 200);
                         }).catch(error => {
-                            console.error('❌ Failed to start camera:', error);
-                            // Try to set mode anyway in case camera is already available
-                            this.setCameraModeWithRetry(mode, navItem.headline, 3);
+                            console.log('📹 Camera failed to start, but system is running with fallback mode');
+                            // Still set mode even if camera failed - system should work without camera
+                            setTimeout(() => {
+                                this.setCameraModeWithRetry(mode, navItem.headline, 3);
+                            }, 200);
                         });
                     } else {
                         console.log('📹 Camera already running or not available, setting mode directly...');

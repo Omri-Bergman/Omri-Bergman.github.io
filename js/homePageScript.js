@@ -7,13 +7,13 @@ class MultiFaceDisplay {
         this.videoTexture = null;
         this.facePlanes = [];
         this.isRunning = false;
+        this.hasCamera = false; // Track if camera is available
         this.frameBuffers = [];
         this.currentFrameIndex = 0;
         this.isDelayMode = false;
         this.frameHistory = [];
         this.maxFrameHistory = 50;
-        this.frameInterval = 5;
-        this.frameCounter = 0;
+        // Frame capture now uses time-based approach (see lastCaptureTime)
         this.delayTextures = [];
         this.isRandomOrder = true;
         this.delayOrder = [];
@@ -32,7 +32,7 @@ class MultiFaceDisplay {
         this.isInitialLoad = true; // Track if this is the first load
 
         // Magic numbers
-        this.PIXELATION_TEXT_PANEL_COUNT = 10; // Number of pixelation text panels to create
+        this.PIXELATION_TEXT_PANEL_COUNT = 9; // Number of pixelation text panels to create
 
         // Text overlay configuration
         this.enableTextOverlay = true; // Toggle for overlay text
@@ -85,6 +85,9 @@ class MultiFaceDisplay {
         this.fpsCounter = 0;
         this.lastFpsTime = 0;
         this.currentFps = 0;
+
+        // Frame capture timing (for consistent delay mode)
+        this.lastCaptureTime = 0;
 
         // Font loading
         this.fontsLoaded = false;
@@ -258,6 +261,18 @@ class MultiFaceDisplay {
         this.setupEventListeners();
         this.initializeMediaPipe();
         this.loadCustomFonts();
+
+        // Image configuration for each mode
+        this.modeImages = {
+            pixelation: ['images/NoCamera/0.webp', 'images/NoCamera/1.webp'],
+            effects: ['images/NoCamera/0.webp', 'images/NoCamera/1.webp'],
+            zoom: ['images/NoCamera/0.webp', 'images/NoCamera/1.webp'],
+            delay: ['images/NoCamera/0.webp', 'images/NoCamera/1.webp']
+        };
+
+        // Storage for loaded image textures
+        this.loadedImageTextures = {};
+        this.imagesLoaded = false;
     }
 
     getCurrentModeKey() {
@@ -271,6 +286,60 @@ class MultiFaceDisplay {
     getArticlesForCurrentMode() {
         const modeKey = this.getCurrentModeKey();
         return this.modeArticles[modeKey] || this.modeArticles.effects;
+    }
+
+    // NEW: Check if running in fallback mode (without camera)
+    isInFallbackMode() {
+        return this.isRunning && !this.hasCamera;
+    }
+
+    // NEW: Load images for fallback mode
+    async loadModeImages() {
+        console.log('🖼️ Loading mode images for fallback mode...');
+
+        const loader = new THREE.TextureLoader();
+        const loadPromises = [];
+
+        // Get unique image paths (avoid loading duplicates)
+        const uniquePaths = new Set();
+        Object.values(this.modeImages).forEach(imagePaths => {
+            imagePaths.forEach(path => uniquePaths.add(path));
+        });
+
+        // Load each unique image
+        for (const imagePath of uniquePaths) {
+            const promise = new Promise((resolve, reject) => {
+                loader.load(
+                    imagePath,
+                    (texture) => {
+                        texture.minFilter = THREE.LinearFilter;
+                        texture.magFilter = THREE.LinearFilter;
+                        this.loadedImageTextures[imagePath] = texture;
+                        console.log(`✅ Loaded image: ${imagePath}`);
+                        resolve(texture);
+                    },
+                    (progress) => {
+                        // Loading progress
+                    },
+                    (error) => {
+                        console.warn(`⚠️ Failed to load image: ${imagePath}`, error);
+                        reject(error);
+                    }
+                );
+            });
+            loadPromises.push(promise);
+        }
+
+        try {
+            await Promise.all(loadPromises);
+            this.imagesLoaded = true;
+            console.log('✅ All mode images loaded successfully!');
+            return true;
+        } catch (error) {
+            console.error('❌ Some images failed to load:', error);
+            this.imagesLoaded = false;
+            return false;
+        }
     }
 
     loadCustomFonts() {
@@ -312,13 +381,21 @@ class MultiFaceDisplay {
                 console.warn('⚠️ Sentence font not available despite loading');
             }
 
-            // If camera is already running, recreate face planes with new fonts
-            if (this.isRunning && this.videoTexture) {
+            // If system is already running, recreate face planes with new fonts
+            // This works for both camera and fallback modes
+            if (this.isRunning) {
+                console.log('🔄 Fonts loaded - recreating face planes with correct fonts');
                 this.createFacePlanes();
             }
         }).catch((error) => {
             console.error('❌ Failed to load custom fonts:', error);
             this.fontsLoaded = false;
+
+            // If system is running (either with camera or fallback), recreate face planes
+            if (this.isRunning) {
+                console.log('🔄 Font loading failed, but recreating face planes with fallback fonts');
+                this.createFacePlanes();
+            }
         });
     }
 
@@ -997,29 +1074,17 @@ class MultiFaceDisplay {
             // Return a Promise that resolves when camera is fully initialized
             return new Promise((resolve, reject) => {
                 this.video.addEventListener('loadedmetadata', () => {
+                    this.hasCamera = true; // Mark that camera is available
                     this.setupVideoTexture();
-                    this.createFacePlanes();
-                    this.startAnimation();
+                    this.initializeSystem();
 
-                    document.getElementById('startBtn').disabled = true;
-                    document.getElementById('stopBtn').disabled = false;
-                    document.getElementById('modeBtn').disabled = false;
-                    document.getElementById('orderBtn').disabled = false;
-                    document.getElementById('info').textContent = 'Multi-face display active!';
+                    document.getElementById('info').textContent = 'Multi-face display active with camera!';
 
-                    // Update FPS display
-                    this.updateFpsDisplay();
+                    // Update mirror uniforms now that camera is available
+                    this.updateMirrorUniforms();
 
                     // Start face detection
                     this.startFaceDetection();
-
-                    // Start entrance animation if in pixelation mode and this is initial load
-                    if (this.isInitialLoad) {
-                        setTimeout(() => {
-                            this.startEntranceAnimation();
-                        }, 500); // Small delay to ensure everything is ready
-                        this.isInitialLoad = false; // Mark as no longer initial load
-                    }
 
                     // Resolve the promise - camera is fully initialized
                     resolve();
@@ -1032,9 +1097,211 @@ class MultiFaceDisplay {
 
         } catch (error) {
             console.error('Error accessing camera:', error);
-            document.getElementById('info').textContent = 'Error: Could not access camera';
-            throw error;
+            document.getElementById('info').textContent = 'Camera not available - running with text panels only';
+
+            // Initialize system without camera
+            this.setupFallbackTexture();
+
+            // Wait for fonts to load before initializing system in fallback mode
+            this.initializeSystemWithFonts();
+
+            // Don't throw error - continue with fallback mode
+            return Promise.resolve();
         }
+    }
+
+    // NEW: Separate system initialization from camera initialization
+    initializeSystem() {
+        this.createFacePlanes();
+        this.startAnimation();
+
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = false;
+        document.getElementById('modeBtn').disabled = false;
+        document.getElementById('orderBtn').disabled = false;
+
+        // Update FPS display
+        this.updateFpsDisplay();
+
+        // Start entrance animation if in pixelation mode and this is initial load
+        if (this.isInitialLoad) {
+            setTimeout(() => {
+                this.startEntranceAnimation();
+            }, 500); // Small delay to ensure everything is ready
+            this.isInitialLoad = false; // Mark as no longer initial load
+        }
+    }
+
+    // NEW: Initialize system with font loading check (for fallback mode)
+    initializeSystemWithFonts() {
+        if (this.fontsLoaded) {
+            // Fonts already loaded - initialize immediately
+            console.log('🔤 Fonts already loaded - initializing system immediately');
+            this.initializeSystem();
+        } else {
+            // Wait for fonts to load with timeout
+            console.log('⏳ Waiting for fonts to load before initializing system...');
+            let attempts = 0;
+            const maxAttempts = 50; // 5 second timeout (50 * 100ms)
+
+            const checkFonts = () => {
+                if (this.fontsLoaded) {
+                    console.log('✅ Fonts loaded - now initializing system');
+                    this.initializeSystem();
+                } else if (attempts < maxAttempts) {
+                    attempts++;
+                    setTimeout(checkFonts, 100);
+                } else {
+                    console.warn('⚠️ Font loading timed out - initializing system with fallback fonts');
+                    this.initializeSystem();
+                }
+            };
+            checkFonts();
+        }
+    }
+
+    // NEW: Create fallback texture when camera is not available
+    setupFallbackTexture() {
+        // Try to load images first, then fall back to gradient
+        this.loadModeImages().then(() => {
+            if (this.imagesLoaded) {
+                console.log('🖼️ Images loaded - using images for fallback textures');
+                this.setupImageFallbackTextures();
+            } else {
+                console.log('🎨 Images failed - using gradient for fallback textures');
+                this.setupGradientFallbackTexture();
+            }
+        }).catch(() => {
+            console.log('🎨 Image loading failed - using gradient for fallback textures');
+            this.setupGradientFallbackTexture();
+        });
+    }
+
+    // NEW: Set up image-based fallback textures
+    setupImageFallbackTextures() {
+        const currentMode = this.getCurrentModeKey();
+        const modeImages = this.modeImages[currentMode] || this.modeImages.pixelation;
+
+        // Create array of both images for 50-50 distribution
+        this.fallbackImageTextures = [];
+
+        // Load both images as textures for random distribution
+        for (let i = 0; i < modeImages.length; i++) {
+            const imagePath = modeImages[i];
+            if (this.loadedImageTextures[imagePath]) {
+                const texture = this.loadedImageTextures[imagePath].clone();
+                texture.needsUpdate = true;
+                this.fallbackImageTextures.push(texture);
+            }
+        }
+
+        // If no images loaded, fallback to gradient
+        if (this.fallbackImageTextures.length === 0) {
+            this.setupGradientFallbackTexture();
+            return;
+        }
+
+        // Use first image as primary texture (for compatibility)
+        this.videoTexture = this.fallbackImageTextures[0].clone();
+        this.videoTexture.needsUpdate = true;
+
+        // Initialize delay textures with both images alternating
+        for (let i = 0; i < this.maxFrameHistory; i++) {
+            const imageIndex = i % modeImages.length;
+            const imagePath = modeImages[imageIndex];
+
+            if (this.loadedImageTextures[imagePath]) {
+                // Use the loaded image texture
+                const texture = this.loadedImageTextures[imagePath].clone();
+                texture.needsUpdate = true;
+
+                // Create a canvas for potential modifications
+                const canvas = document.createElement('canvas');
+                canvas.width = 640;
+                canvas.height = 480;
+
+                this.delayTextures.push({
+                    canvas: canvas,
+                    context: canvas.getContext('2d'),
+                    texture: texture
+                });
+            } else {
+                // Fallback to gradient if image not found
+                this.setupGradientDelayTexture(i);
+            }
+        }
+    }
+
+    // NEW: Set up gradient fallback texture (original method)
+    setupGradientFallbackTexture() {
+        // Create a canvas with a subtle pattern for fallback
+        const canvas = document.createElement('canvas');
+        canvas.width = 640;
+        canvas.height = 480;
+        const ctx = canvas.getContext('2d');
+
+        // Create a subtle gradient background
+        const gradient = ctx.createLinearGradient(0, 0, 640, 480);
+        gradient.addColorStop(0, '#1a1a1a');
+        gradient.addColorStop(0.5, '#2d2d2d');
+        gradient.addColorStop(1, '#1a1a1a');
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 640, 480);
+
+        // Add some subtle noise pattern
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+        for (let i = 0; i < 1000; i++) {
+            const x = Math.random() * 640;
+            const y = Math.random() * 480;
+            ctx.fillRect(x, y, 1, 1);
+        }
+
+        this.videoTexture = new THREE.CanvasTexture(canvas);
+        this.videoTexture.minFilter = THREE.LinearFilter;
+        this.videoTexture.magFilter = THREE.LinearFilter;
+        this.videoTexture.format = THREE.RGBFormat;
+        this.videoTexture.needsUpdate = true;
+
+        // Initialize delay textures with fallback content
+        for (let i = 0; i < this.maxFrameHistory; i++) {
+            this.setupGradientDelayTexture(i);
+        }
+    }
+
+    // NEW: Set up a single gradient delay texture
+    setupGradientDelayTexture(index) {
+        const delayCanvas = document.createElement('canvas');
+        delayCanvas.width = 640;
+        delayCanvas.height = 480;
+        const delayCtx = delayCanvas.getContext('2d');
+
+        // Create gradient (same as main texture)
+        const gradient = delayCtx.createLinearGradient(0, 0, 640, 480);
+        gradient.addColorStop(0, '#1a1a1a');
+        gradient.addColorStop(0.5, '#2d2d2d');
+        gradient.addColorStop(1, '#1a1a1a');
+
+        delayCtx.fillStyle = gradient;
+        delayCtx.fillRect(0, 0, 640, 480);
+
+        // Add noise
+        delayCtx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+        for (let i = 0; i < 1000; i++) {
+            const x = Math.random() * 640;
+            const y = Math.random() * 480;
+            delayCtx.fillRect(x, y, 1, 1);
+        }
+
+        const texture = new THREE.CanvasTexture(delayCanvas);
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+
+        this.delayTextures.push({
+            canvas: delayCanvas,
+            context: delayCtx,
+            texture: texture
+        });
     }
 
     setupVideoTexture() {
@@ -1244,6 +1511,9 @@ class MultiFaceDisplay {
                 }
             }
 
+            // Determine if we should mirror (camera = mirror, images = no mirror)
+            const shouldMirror = this.hasCamera ? 1.0 : 0.0;
+
             // Create materials for each face
             const effectMaterial = new THREE.ShaderMaterial({
                 uniforms: {
@@ -1251,7 +1521,8 @@ class MultiFaceDisplay {
                     uTime: { value: 0 },
                     uDelay: { value: i * 0.1 },
                     uIntensity: { value: 0.5 + ((i * 7919) % 1000) / 2000 }, // Deterministic "random" based on position
-                    uReveal: { value: 0.0 } // Always start black for entrance animation
+                    uReveal: { value: 0.0 }, // Always start black for entrance animation
+                    uMirror: { value: shouldMirror } // Control mirroring based on camera/image mode
                 },
                 vertexShader: shaders[isTextPanel ? 0 : shaderIndex].vertex, // Use plain shader for text
                 fragmentShader: shaders[isTextPanel ? 0 : shaderIndex].fragment
@@ -1260,7 +1531,8 @@ class MultiFaceDisplay {
             const plainMaterial = new THREE.ShaderMaterial({
                 uniforms: {
                     uTexture: { value: textureToUse },
-                    uReveal: { value: 0.0 } // Always start black for entrance animation
+                    uReveal: { value: 0.0 }, // Always start black for entrance animation
+                    uMirror: { value: shouldMirror } // Control mirroring based on camera/image mode
                 },
                 vertexShader: shaders[0].vertex,
                 fragmentShader: shaders[0].fragment
@@ -1304,7 +1576,8 @@ class MultiFaceDisplay {
                     uZoom: { value: 1.0 },
                     uPanX: { value: 0.0 },
                     uPanY: { value: 0.0 },
-                    uReveal: { value: 0.0 } // Always start black for entrance animation
+                    uReveal: { value: 0.0 }, // Always start black for entrance animation
+                    uMirror: { value: shouldMirror } // Control mirroring based on camera/image mode
                 },
                 vertexShader: `
                     varying vec2 vUv;
@@ -1319,10 +1592,13 @@ class MultiFaceDisplay {
                     uniform float uPanX;
                     uniform float uPanY;
                     uniform float uReveal;
+                    uniform float uMirror;
                     varying vec2 vUv;
                     void main() {
                         vec2 uv = vUv;
-                        uv.x = 1.0 - uv.x; // Mirror horizontally
+                        if (uMirror > 0.5) {
+                            uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                        }
                         
                         // Video aspect ratio adjustment (640x480 = 4:3)
                         float videoAspect = 640.0 / 480.0;
@@ -1356,7 +1632,8 @@ class MultiFaceDisplay {
                 uniforms: {
                     uTexture: { value: textureToUse },
                     uIntensity: { value: 0.5 + ((i * 6007) % 1000) / 2000 }, // Deterministic "random" based on position
-                    uReveal: { value: 0.0 } // Always start black for entrance animation
+                    uReveal: { value: 0.0 }, // Always start black for entrance animation
+                    uMirror: { value: shouldMirror } // Control mirroring based on camera/image mode
                 },
                 vertexShader: pixelationShaders[pixelationShaderIndex].vertex,
                 fragmentShader: pixelationShaders[pixelationShaderIndex].fragment
@@ -2140,10 +2417,13 @@ class MultiFaceDisplay {
                 fragment: `
                 uniform sampler2D uTexture;
                 uniform float uReveal;
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec4 color = texture2D(uTexture, uv);
                     
                     // Mix between black and the effect based on reveal
@@ -2159,10 +2439,13 @@ class MultiFaceDisplay {
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
                 uniform float uReveal;
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec4 color = texture2D(uTexture, uv);
                     // Extreme contrast + posterization
                     color.rgb = (color.rgb - 0.5) * 2.5 + 0.5;
@@ -2181,10 +2464,13 @@ class MultiFaceDisplay {
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
                 uniform float uReveal;
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec4 color = texture2D(uTexture, uv);
                     float luminance = dot(color.rgb, vec3(0.299, 0.587, 0.114));
                     // Extreme red isolation with high contrast
@@ -2203,10 +2489,13 @@ class MultiFaceDisplay {
                 fragment: `
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec4 color = texture2D(uTexture, uv);
                     float luminance = dot(color.rgb, vec3(0.299, 0.587, 0.114));
                     // Extreme cyan/blue with high saturation
@@ -2222,10 +2511,13 @@ class MultiFaceDisplay {
                 fragment: `
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec4 color = texture2D(uTexture, uv);
                     // Invert + extreme color shift
                     vec3 inverted = 1.0 - color.rgb;
@@ -2241,10 +2533,13 @@ class MultiFaceDisplay {
                 fragment: `
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec4 color = texture2D(uTexture, uv);
                     float gray = dot(color.rgb, vec3(0.299, 0.587, 0.114));
                     // EXTREME oversaturation
@@ -2308,29 +2603,38 @@ class MultiFaceDisplay {
             this.updateFpsDisplay();
         }
 
+
         // Update entrance animation if active
         this.updateEntranceAnimation();
 
-        // ALWAYS fill delay buffer regardless of mode
-        this.frameCounter++;
-        if (this.frameCounter % this.frameInterval === 0) {
+        // ALWAYS fill delay buffer regardless of mode - with consistent timing
+        const now = Date.now();
+        if (!this.lastCaptureTime) this.lastCaptureTime = now;
+
+        // Capture frames at consistent 60 FPS regardless of display refresh rate
+        const captureInterval = 1000 / 60; // 60 FPS capture rate
+        if (now - this.lastCaptureTime >= captureInterval) {
             this.captureFrame();
+            this.lastCaptureTime = now;
         }
 
         if (this.isDelayMode) {
             this.updateDelayMode();
         } else if (this.isZoomMode) {
             this.updateZoomMode();
+            this.updateImageFallbackMode(); // Apply 50-50 image distribution for zoom mode
         } else if (this.isPrimitiveMode) {
             this.updatePrimitiveMode();
+            this.updateImageFallbackMode(); // Apply 50-50 image distribution for primitive mode
         } else {
-            // Update shader uniforms for effects mode
+            // Update shader uniforms for effects mode and pixelation mode
             this.facePlanes.forEach((faceData, index) => {
                 if (faceData.effectMaterial.uniforms.uTime) {
                     // console.log(Math.sin(time + faceData.delay));
                     faceData.effectMaterial.uniforms.uTime.value = Math.sin(time + faceData.delay);
                 }
             });
+            this.updateImageFallbackMode(); // Apply 50-50 image distribution for effects/pixelation modes
         }
 
         this.renderer.render(this.scene, this.camera);
@@ -2391,6 +2695,39 @@ class MultiFaceDisplay {
         });
     }
 
+    // NEW: Update image fallback textures for 50-50 distribution in all modes
+    updateImageFallbackMode() {
+        if (!this.isInFallbackMode() || !this.fallbackImageTextures || this.fallbackImageTextures.length < 2) {
+            return;
+        }
+
+        this.facePlanes.forEach((faceData, index) => {
+            // Skip text panels - don't apply fallback effects to them
+            if (faceData.isTextPanel) {
+                return;
+            }
+
+            // Use deterministic random based on panel index for consistent assignment
+            const randomValue = (index * 7919) % 1000;
+            const imageIndex = randomValue < 500 ? 0 : 1; // 50-50 split
+            const selectedTexture = this.fallbackImageTextures[imageIndex];
+
+            // Update all material uniforms that use textures
+            if (faceData.effectMaterial && faceData.effectMaterial.uniforms.uTexture) {
+                faceData.effectMaterial.uniforms.uTexture.value = selectedTexture;
+            }
+            if (faceData.plainMaterial && faceData.plainMaterial.uniforms.uTexture) {
+                faceData.plainMaterial.uniforms.uTexture.value = selectedTexture;
+            }
+            if (faceData.zoomMaterial && faceData.zoomMaterial.uniforms.uTexture) {
+                faceData.zoomMaterial.uniforms.uTexture.value = selectedTexture;
+            }
+            if (faceData.pixelationMaterial && faceData.pixelationMaterial.uniforms.uTexture) {
+                faceData.pixelationMaterial.uniforms.uTexture.value = selectedTexture;
+            }
+        });
+    }
+
     captureFrame() {
         this.frameHistory.push(Date.now());
 
@@ -2412,7 +2749,15 @@ class MultiFaceDisplay {
         if (this.delayTextures[0]) {
             const ctx = this.delayTextures[0].context;
             ctx.clearRect(0, 0, 640, 480);
-            ctx.drawImage(this.video, 0, 0, 640, 480);
+
+            // Only draw from video if it's available and ready
+            if (this.video && this.video.readyState >= 2) {
+                ctx.drawImage(this.video, 0, 0, 640, 480);
+            } else {
+                // Keep the fallback pattern - no need to redraw since it's already there
+                // The texture already has the fallback content from setupFallbackTexture()
+            }
+
             this.delayTextures[0].texture.needsUpdate = true;
         }
     }
@@ -2452,6 +2797,45 @@ class MultiFaceDisplay {
         }
 
         this.updateModeDisplay();
+
+        // If in fallback mode with images, reload textures for new mode
+        if (this.isInFallbackMode() && this.imagesLoaded) {
+            console.log('🔄 Mode changed - reloading images for new mode');
+            this.setupImageFallbackTextures();
+        }
+
+        // Update mirror uniforms for all materials
+        this.updateMirrorUniforms();
+
+        // Update image fallback textures for 50-50 distribution (except delay mode)
+        if (!this.isDelayMode) {
+            this.updateImageFallbackMode();
+        }
+    }
+
+    // NEW: Update mirror uniforms for all materials based on camera availability
+    updateMirrorUniforms() {
+        const shouldMirror = this.hasCamera ? 1.0 : 0.0;
+
+        this.facePlanes.forEach((faceData) => {
+            if (!faceData.isTextPanel) { // Only update video panels, not text panels
+                // Update all material uniforms that have uMirror
+                if (faceData.effectMaterial && faceData.effectMaterial.uniforms.uMirror) {
+                    faceData.effectMaterial.uniforms.uMirror.value = shouldMirror;
+                }
+                if (faceData.plainMaterial && faceData.plainMaterial.uniforms.uMirror) {
+                    faceData.plainMaterial.uniforms.uMirror.value = shouldMirror;
+                }
+                if (faceData.zoomMaterial && faceData.zoomMaterial.uniforms.uMirror) {
+                    faceData.zoomMaterial.uniforms.uMirror.value = shouldMirror;
+                }
+                if (faceData.pixelationMaterial && faceData.pixelationMaterial.uniforms.uMirror) {
+                    faceData.pixelationMaterial.uniforms.uMirror.value = shouldMirror;
+                }
+            }
+        });
+
+        console.log(`🪞 Updated mirror uniforms: ${shouldMirror ? 'Mirroring ON (camera)' : 'Mirroring OFF (images)'}`);
     }
 
     updateModeDisplay() {
@@ -2466,6 +2850,12 @@ class MultiFaceDisplay {
         // Recreate face planes with new articles for the current mode FIRST
         if (this.isRunning && this.videoTexture) {
             this.createFacePlanes();
+
+            // Apply 50-50 image distribution for fallback mode (except delay mode)
+            if (!this.isDelayMode) {
+                this.updateImageFallbackMode();
+            }
+
             // Trigger fast entrance animation when switching modes (except on initial load)
             if (!this.isInitialLoad) {
                 setTimeout(() => {
@@ -2777,32 +3167,48 @@ class MultiFaceDisplay {
             const pixelationSentences = [
                 // Panel 0
                 [
-                    { title: "עורכים:", names: "ענת זנגר, ניר פרבר" },
-                    { title: "עורכים מייסדים:", names: "ענת זנגר, ניר פרבר" }
+                    { title: "עורכים:", names: "ענת זנגר, ניר פרבר" }
                 ],
                 // Panel 1
                 [
-                    { title: "הפקה:", names: "ליאור פרלשטיין" },
-                    { title: "אוצר פרויקט \"ואל מסך תשוב\":", names: "אופיר פלדמן" }
+                    { title: "הפקה:", names: "ליאור פרלשטיין" }
                 ],
                 // Panel 2
                 [
-                    { title: "חברי המערכת:", names: "ענת זנגר, ניר פרבר, יעל לוי, עידו לויט, אורי לוין" },  
-                    { title: "מערכת צעירה:", names: "עומר גורי, ליאור פרלשטיין, מישל צ'יקו, טל רז" }
+                    { title: "חברי המערכת:", names: "ענת זנגר, ניר פרבר, יעל לוי, עידו לויט, אורי לוין" }
                 ],
                 // Panel 3
                 [
-                    { title: "ועדה אקדמית:", names: "דר פבלו אוטין, דר שי בידרמן, דר בועז חגין, דר דן חיוטין, דר יעל לוי, דר עידו לויט, דר אורי לוין, דר אוהד לנדסמן, דר מירי מוהבן שקד" }
+                    { title: "ועדה אקדמית:", names: "ד\"ר פבלו אוטין, ד\"ר שי בידרמן, ד\"ר בועז חגין, ד\"ר דן חיוטין, ד\"ר יעל לוי, ד\"ר עידו לויט, ד\"ר אורי לוין, ד\"ר אוהד לנדסמן, ד\"ר מירי מוהבן שקד" }
                 ],
                 // Panel 4
                 [
-                    { title: "עורכת לשון:", names: "רונית רוזנטל" },
-                    { title: "תרגום ועריכה לשונית באנגלית:", names: "אורית פרידלנד" }
+                    { title: "עורכת לשון:", names: "רונית רוזנטל" }
                 ],
                 // Panel 5
                 [
                     { title: "עיצוב גרפי:", names: "עמרי ברגמן" }
+                ],
+
+                // Panel 6
+                [
+                { title: "עורכים מייסדים:", names: "ענת זנגר, ניר פרבר" }
+                ],
+                // Panel 7
+                [
+                    { title: "אוצר פרויקט \"ואל מסך תשוב\":", names: "אופיר פלדמן" }
+                ],
+
+                // Panel 8
+                [
+                { title: "מערכת צעירה:", names: "עומר גורי, ליאור פרלשטיין, מישל צ'יקו, טל רז" }
+                ],
+
+                // Panel 9
+                [
+                { title: "תרגום ועריכה לשונית באנגלית:", names: "אורית פרידלנד" }
                 ]
+
             ];
 
             // Use different sentences based on panel index
@@ -3053,7 +3459,7 @@ class MultiFaceDisplay {
 
         if (isStructuredContent) {
             // Handle structured content with different fonts for titles and names
-            this.drawStructuredTextLarge(ctx, sentences, 
+            this.drawStructuredTextLarge(ctx, sentences,
                 (canvasWidth / pixelRatio) / 1.15,
                 (canvasHeight / pixelRatio) / 2.2,
                 (canvasWidth / pixelRatio) * 0.7,
@@ -3126,9 +3532,11 @@ class MultiFaceDisplay {
         });
     }
 
-    // Draw structured text with different fonts for titles and names
+        // Draw structured text with different fonts for titles and names
     drawStructuredTextLarge(ctx, structuredSentences, x, y, maxWidth, fontSize) {
         const lineHeight = fontSize * 1.2;
+        const titleFontSize = fontSize * 1.2; // Make titles bigger
+        const namesFontSize = fontSize;
         const titleFont = this.fontsLoaded ? this.fontConfig.scentence.name : 'Arial, sans-serif';
         const authorFont = this.fontsLoaded ? this.fontConfig.author.name : 'Arial, sans-serif';
         
@@ -3136,23 +3544,23 @@ class MultiFaceDisplay {
         const textLines = [];
         
         structuredSentences.forEach(sentenceObj => {
-            // Add title (single line, usually short)
+            // Add title (single line, usually short) with bigger font
             textLines.push({
                 text: this.fixHebrewPunctuation(sentenceObj.title),
-                font: `${fontSize}px ${titleFont}`,
+                font: `${titleFontSize}px ${titleFont}`,
                 isTitle: true
             });
             
             // Add names with text wrapping
             const namesText = this.fixHebrewPunctuation(sentenceObj.names);
-            ctx.font = `${fontSize}px ${authorFont}`; // Set font for measuring
-            
-            // Wrap the names text
+            ctx.font = `${namesFontSize}px ${authorFont}`; // Set font for measuring
+
+                        // Wrap the names text
             const wrappedNames = this.wrapText(ctx, namesText, maxWidth);
             wrappedNames.forEach(line => {
                 textLines.push({
                     text: line,
-                    font: `${fontSize}px ${authorFont}`,
+                    font: `${namesFontSize}px ${authorFont}`,
                     isTitle: false
                 });
             });
@@ -3160,27 +3568,27 @@ class MultiFaceDisplay {
             // Add empty line between sentence objects for spacing
             textLines.push({
                 text: '',
-                font: `${fontSize}px ${titleFont}`,
+                font: `${titleFontSize}px ${titleFont}`,
                 isTitle: true
             });
         });
-        
+
         // Remove the last empty line
         if (textLines.length > 0 && textLines[textLines.length - 1].text === '') {
             textLines.pop();
         }
-        
+
         // Calculate total height needed
         const totalHeight = textLines.length * lineHeight;
         const startY = y - totalHeight / 2 + lineHeight / 2;
-        
+
         // Draw each line
         textLines.forEach((line, index) => {
             if (line.text === '') return; // Skip empty lines
-            
+
             // Set font for this line
             ctx.font = line.font;
-            
+
             // Draw the text
             ctx.fillText(line.text, x, startY + index * lineHeight);
         });
@@ -3554,10 +3962,13 @@ class MultiFaceDisplay {
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
                 uniform float uReveal; // 0.0 = black, 1.0 = full effect
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec2 pixelSize = vec2(15.0, 12.0);
                     vec2 pixelUv = floor(uv * pixelSize) / pixelSize;
                     
@@ -3590,10 +4001,13 @@ class MultiFaceDisplay {
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
                 uniform float uReveal; // 0.0 = black, 1.0 = full effect
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec2 pixelSize = vec2(25.0, 20.0);
                     vec2 pixelUv = floor(uv * pixelSize) / pixelSize;
                     
@@ -3628,10 +4042,13 @@ class MultiFaceDisplay {
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
                 uniform float uReveal; // 0.0 = black, 1.0 = full effect
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec2 pixelSize = vec2(40.0, 30.0);
                     vec2 pixelUv = floor(uv * pixelSize) / pixelSize;
                     
@@ -3664,10 +4081,13 @@ class MultiFaceDisplay {
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
                 uniform float uReveal; // 0.0 = black, 1.0 = full effect
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec2 pixelSize = vec2(8.0, 6.0);
                     vec2 pixelUv = floor(uv * pixelSize) / pixelSize;
                     
@@ -3700,10 +4120,13 @@ class MultiFaceDisplay {
                 uniform sampler2D uTexture;
                 uniform float uIntensity;
                 uniform float uReveal; // 0.0 = black, 1.0 = full effect
+                uniform float uMirror;
                 varying vec2 vUv;
                 void main() {
                     vec2 uv = vUv;
-                    uv.x = 1.0 - uv.x; // Mirror horizontally
+                    if (uMirror > 0.5) {
+                        uv.x = 1.0 - uv.x; // Mirror horizontally only for video
+                    }
                     vec2 pixelSize = vec2(20.0, 20.0); // Perfect squares
                     vec2 pixelUv = floor(uv * pixelSize) / pixelSize;
                     
@@ -4265,13 +4688,17 @@ function autoStartFromNavbar() {
         // console.log('🔗 User came from navbar, auto-starting camera...');
         // Start immediately - no delay
         if (!display.isRunning) {
-            display.startCamera();
+            display.startCamera().catch(error => {
+                console.log('📹 Camera failed to start, but system is still running with fallback mode');
+            });
         }
     } else {
         // Even for direct visits, auto-start with pixelation mode
         // console.log('🔲 Direct visit - auto-starting with Pixelation Mode...');
         if (!display.isRunning) {
-            display.startCamera();
+            display.startCamera().catch(error => {
+                console.log('📹 Camera failed to start, but system is still running with fallback mode');
+            });
         }
     }
 }
