@@ -239,35 +239,57 @@ body {
 /* === MODAL IMAGES GRID === */
 .group-modal-images {
     display: grid;
-    gap: 0px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    /* Grid columns will be set dynamically by JavaScript */
     align-items: start;
     padding: 30px;
 }
 
-/* Responsive breakpoints for image grid */
+/* Smart grid classes - applied dynamically by JavaScript */
+.group-modal-images.cols-1 {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    max-width: 90vw; /* Allow ultra-wide images to use more screen width */
+    margin: 0 auto;
+}
+
+.group-modal-images.cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.group-modal-images.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.group-modal-images.cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+/* Ultra-wide image optimization */
+.group-modal-images.cols-1 .group-modal-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.group-modal-images.cols-2 .group-modal-image {
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments for mobile */
 @media (max-width: 768px) {
     .group-modal-images {
-        grid-template-columns: 1fr;
+        padding: 20px;
         gap: 15px;
     }
-}
-
-@media (min-width: 769px) and (max-width: 1200px) {
-    .group-modal-images {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1201px) {
-    .group-modal-images {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 1600px) {
-    .group-modal-images {
-        grid-template-columns: repeat(4, 1fr);
+    
+    .group-modal-images.cols-1 {
+        gap: 20px;
     }
 }
 

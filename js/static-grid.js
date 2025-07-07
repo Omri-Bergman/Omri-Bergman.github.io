@@ -78,7 +78,16 @@ class StaticGridLayout {
             { type: 'image', src: '../../images/Screen/Agadat/7.webp', alt: 'תמונה 45' },
             { type: 'image', src: '../../images/Screen/Agadat/8.webp', alt: 'תמונה 46' },
             { type: 'image', src: '../../images/Screen/Agadat/9.webp', alt: 'תמונה 47' },
-
+            { type: 'text', title: '', content: 'המזח (La Jetée)', author: ' כריס מרקר   ', year: '1962', medium: ' צילומי מסך' },
+            { type: 'image', src: '../../images/Screen/Jetee/0.webp', alt: 'תמונה 48' },
+            { type: 'image', src: '../../images/Screen/Jetee/1.webp', alt: 'תמונה 49' },
+            { type: 'image', src: '../../images/Screen/Jetee/2.webp', alt: 'תמונה 50' },
+            { type: 'image', src: '../../images/Screen/Jetee/3.webp', alt: 'תמונה 51' },
+            { type: 'image', src: '../../images/Screen/Jetee/4.webp', alt: 'תמונה 52' },
+            { type: 'image', src: '../../images/Screen/Jetee/5.webp', alt: 'תמונה 53' },
+            { type: 'text', title: '', content: 'HERE BE DRAGONS', author: ' נבט יצחק  ', year: '2023', medium: ' מיצב ווידאו ' },
+            { type: 'image', src: '../../images/Screen/dragons/0.webp', alt: 'תמונה 54' },
+            { type: 'image', src: '../../images/Screen/dragons/1.webp', alt: 'תמונה 55' },
         ];
         
         this.init();
@@ -492,11 +501,15 @@ class StaticGridLayout {
         // PERFORMANCE: Clear previous content efficiently
         imagesGrid.innerHTML = '';
         
+        // Get images from group (skip the text item)
+        const images = group.items.filter(item => item.type === 'image');
+        
+        // SMART GRID: Determine optimal columns based on images and screen
+        const optimalColumns = this.calculateOptimalColumns(images);
+        this.applyOptimalGridLayout(imagesGrid, optimalColumns);
+        
         // PERFORMANCE: Use document fragment for batched DOM operations
         const fragment = document.createDocumentFragment();
-        
-        // Add images to grid (skip the text item)
-        const images = group.items.filter(item => item.type === 'image');
         
         // Generate random delays for each modal image
         const randomDelays = images.map(() => Math.random() * 1000); // Random delays between 0-1000ms
@@ -564,7 +577,7 @@ class StaticGridLayout {
         // SYNCHRONIZED CURSORS: Hide all cursors when modal opens
         this.handleImageMouseLeave();
         
-        console.log(`🖼️ Starting random fade-in for ${images.length} images (random delays 0-1000ms each)`);
+        console.log(`🖼️ Starting random fade-in for ${images.length} images with ${optimalColumns} columns (random delays 0-1000ms each)`);
     }
 
     hideGroupModal() {
@@ -862,6 +875,144 @@ class StaticGridLayout {
     updateContent(newContent) {
         this.content = newContent;
         this.createPanels();
+    }
+
+    // SMART GRID: Calculate optimal columns based on image analysis
+    calculateOptimalColumns(images) {
+        const screenWidth = window.innerWidth;
+        const imageCount = images.length;
+        
+        // Analyze average aspect ratio (we'll estimate based on typical ratios)
+        // For now, we'll use a heuristic approach since we don't have actual dimensions
+        // In a real implementation, you'd load image dimensions first
+        
+        // Screen-based maximum columns
+        let maxColumns;
+        if (screenWidth <= 768) {
+            maxColumns = 1; // Mobile: always 1
+        } else if (screenWidth <= 1200) {
+            maxColumns = 2; // Tablet: max 2
+        } else if (screenWidth <= 1600) {
+            maxColumns = 3; // Desktop: max 3
+        } else {
+            maxColumns = 4; // Large desktop: max 4
+        }
+        
+        // Content-based optimization
+        let optimalColumns;
+        
+        if (imageCount === 1) {
+            optimalColumns = 1; // Single image: always 1 column
+        } else if (imageCount === 2) {
+            // 2 images: prefer 2 columns, but check for ultra-wide
+            optimalColumns = Math.min(2, maxColumns);
+            
+            // Enhanced heuristic for ultra-wide image detection
+            const hasUltraWideImages = images.some(img => 
+                img.src.includes('4488') || // Your specific ultra-wide images
+                img.src.includes('ultrawide') || 
+                img.src.includes('wide') ||
+                img.src.includes('banner') ||
+                img.src.includes('panorama') ||
+                this.isLikelyUltraWideByPath(img.src)
+            );
+            
+            if (hasUltraWideImages && screenWidth >= 1200) {
+                optimalColumns = 1; // Force 1 column for ultra-wide images
+                console.log('🎯 Detected ultra-wide images: using 1 column layout');
+            }
+        } else if (imageCount <= 4) {
+            // 3-4 images: use image count or max columns, whichever is smaller
+            optimalColumns = Math.min(imageCount, maxColumns);
+            
+            // Check if any images are ultra-wide and adjust
+            const hasUltraWideImages = images.some(img => 
+                img.src.includes('4488') || 
+                img.src.includes('ultrawide') || 
+                img.src.includes('wide') ||
+                img.src.includes('banner') ||
+                img.src.includes('panorama') ||
+                this.isLikelyUltraWideByPath(img.src)
+            );
+            
+            if (hasUltraWideImages) {
+                // Reduce columns for ultra-wide images
+                optimalColumns = Math.min(optimalColumns, 2);
+                console.log(`🎯 Detected ultra-wide images in ${imageCount}-image group: reducing to ${optimalColumns} columns`);
+            }
+        } else {
+            // 5+ images: use max columns, but still check for ultra-wide
+            optimalColumns = maxColumns;
+            
+            const hasUltraWideImages = images.some(img => 
+                img.src.includes('4488') || 
+                img.src.includes('ultrawide') || 
+                img.src.includes('wide') ||
+                img.src.includes('banner') ||
+                img.src.includes('panorama') ||
+                this.isLikelyUltraWideByPath(img.src)
+            );
+            
+            if (hasUltraWideImages && optimalColumns > 2) {
+                // For large groups with ultra-wide images, cap at 2 columns
+                optimalColumns = 2;
+                console.log(`🎯 Detected ultra-wide images in large group: capping at ${optimalColumns} columns`);
+            }
+        }
+        
+        console.log(`🧠 Smart grid analysis: ${imageCount} images, screen ${screenWidth}px → ${optimalColumns} columns (max: ${maxColumns})`);
+        
+        return optimalColumns;
+    }
+
+    // SMART GRID: Apply optimal layout to images grid
+    applyOptimalGridLayout(imagesGrid, columns) {
+        // Remove any existing dynamic classes
+        imagesGrid.classList.remove('cols-1', 'cols-2', 'cols-3', 'cols-4');
+        
+        // Add specific class for this column count
+        imagesGrid.classList.add(`cols-${columns}`);
+        
+        // Set CSS Grid template directly
+        imagesGrid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        
+        console.log(`🎨 Applied ${columns}-column layout to modal grid`);
+    }
+
+    // SMART GRID: Detect ultra-wide images by analyzing file path and context
+    isLikelyUltraWideByPath(imagePath) {
+        // Check for common ultra-wide indicators in path
+        const ultraWideIndicators = [
+            'screen', 'desktop', 'monitor', 'display',
+            'cinema', 'movie', 'film', 'sequence',
+            'timeline', 'strip', 'banner', 'header'
+        ];
+        
+        const pathLower = imagePath.toLowerCase();
+        
+        // Check if path contains ultra-wide indicators
+        const hasUltraWideIndicator = ultraWideIndicators.some(indicator => 
+            pathLower.includes(indicator)
+        );
+        
+        // Your specific folder structure analysis
+        // Looking at your images, Screen folder often contains ultra-wide sequences
+        const isScreenFolder = pathLower.includes('/screen/');
+        const hasSequentialNumbers = /\/\d+\.webp$/.test(pathLower); // Sequential numbered files
+        
+        // If it's from Screen folder with sequential numbers, likely ultra-wide
+        if (isScreenFolder && hasSequentialNumbers) {
+            console.log(`🎯 Likely ultra-wide detected: ${imagePath} (Screen folder + sequential)`);
+            return true;
+        }
+        
+        // Other ultra-wide indicators
+        if (hasUltraWideIndicator) {
+            console.log(`🎯 Likely ultra-wide detected: ${imagePath} (keyword: ${ultraWideIndicators.find(i => pathLower.includes(i))})`);
+            return true;
+        }
+        
+        return false;
     }
 }
 
