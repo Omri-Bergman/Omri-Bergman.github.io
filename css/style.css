@@ -1664,7 +1664,7 @@ p {
 }
 
 .fake-cursor svg {
-    filter: drop-shadow(0 0 3px rgba(152, 152, 255, 0.8));
+    filter: drop-shadow(0 0 3px rgba(68, 68, 68, 0.3));
 }
 
 /* Backward compatibility - keep proportional cursor styles */
@@ -1785,6 +1785,12 @@ div {
         background-color: rgba(221, 221, 209, 0.8);
         z-index: 10;
     }
+
+    .article-header-text.editors-title .paragraph-start-indent {
+        width: 100%;
+        font-size: 1.2rem;
+        margin: 0px;
+    }
 }
 
 
@@ -1816,7 +1822,7 @@ div {
         font-size: 1.2rem;
         line-height: 1.5;
     }
-xzds
+
     .article-header-author {
         font-size: 1.1rem;
         font-weight: bold;
@@ -1827,6 +1833,16 @@ xzds
     .article-header-text.twin-peaks-title .paragraph-start-indent {
         width: 100%;
         font-size: 1.4rem;
+    }
+
+    .article-header-text.psyco-title .paragraph-start-indent {
+        font-size: 1.2rem;
+        width: 100%;
+    }
+
+    .article-header-text.editors-title {
+        gap: 0px;
+        
     }
 
     .article-header-text.editors-title .paragraph-start-indent {
@@ -2423,6 +2439,7 @@ xzds
         width: 100%;
         font-size: 1.4rem;
         gap: 0px;
+        padding-top: 70px;
     }
 
     .article-content-first-section-main {
