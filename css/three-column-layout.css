@@ -69,6 +69,12 @@
     font-family: 'TheBasics-Regular', sans-serif; */
 }
 
+@media (min-width: 1600px) {
+    .side-column p{
+        font-size: 28px;
+    }
+}
+
 /* Responsive design */
 @media (max-width: 1200px) {
     .three-column-container {
@@ -192,6 +198,21 @@
     color: #666;
     margin-bottom: 10px;
     font-family: 'TheBasics-Regular', sans-serif;
+}
+
+@media (min-width: 1600px) {
+
+    h2 {
+        padding-left: 0px;
+        font-size: 48px;
+    }
+
+    .side-column h2{
+        font-size: 34px;
+    }
+    .side-column p{
+        font-size: 20px;
+    }
 }
 
 /* Custom min-height override for sync-images */

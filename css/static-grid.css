@@ -424,6 +424,33 @@ body {
     color: #222;
 } */
 
+@media (min-width: 1600px) {
+    h2{
+        font-size: 48px;
+        padding-left: 50px;
+    }   
+    .paragraph-start-indent{
+        padding-right: 70px;
+        font-size: 28px !important;
+    }
+
+    .paragraph-start-indent-text {
+        padding-right: 70px;
+        font-size: 28px 
+    }
+
+    .bordered-list{
+        font-size: 28px; 
+    }
+    .article-content-eighth-section-text .paragraph-start-indent{
+        padding-right: 100px;
+    }
+
+    .article-content-fifth-section .paragraph-start-indent {
+        font-size: 28px;
+    }
+}
+
 /* Mobile adjustments for article section */
 @media (max-width: 768px) {
     /* .article-section {

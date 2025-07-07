@@ -969,7 +969,7 @@ p {
     align-items: flex-start;
     gap: 20px;
     justify-content: space-between;
-    margin-bottom: 100px;
+    margin-bottom: 150px;
 }
 
 .article-content-fifth-section-text {
@@ -1756,6 +1756,28 @@ div {
 }
 
 /* ------- END RTL LAYOUT FIXES ------- */
+
+@media (min-width: 1600px) {
+    h2{
+        font-size: 48px;
+        padding-left: 50px;
+    }   
+    .paragraph-start-indent{
+        padding-right: 70px;
+        font-size: 28px;
+    }
+
+    .bordered-list{
+        font-size: 28px;
+    }
+    .article-content-eighth-section-text .paragraph-start-indent{
+        padding-right: 100px;
+    }
+
+    .article-content-fifth-section .paragraph-start-indent {
+        font-size: 28px;
+    }
+}
 
 /* ===============================================
    MOBILE & TABLET RESPONSIVE STYLES
