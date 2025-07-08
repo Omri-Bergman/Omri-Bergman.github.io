@@ -1777,6 +1777,10 @@ div {
     .article-content-fifth-section .paragraph-start-indent {
         font-size: 28px;
     }
+
+    .article-content-eighth-section {
+        margin-top: 150px;
+    }
 }
 
 /* ===============================================
